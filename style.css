@@ -1,0 +1,66 @@
+/* GENERAL */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  display: grid;
+  /* grid-template-columns: 1fr 2fr; */
+  margin: 1em;
+  grid-gap: 1em;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ACTIONS MENU */
+.menu {
+  background-color: lightgray;
+  height: calc(100vh - 6.5em);
+  width: 17em;
+  padding: 1em;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1em;
+
+  align-content: start;
+
+  position: fixed;
+}
+
+.list-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 0.5em;
+  margin-top: 2em;
+}
+
+/* STUDENT LIST */
+.list {
+  margin-left: 20em;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  background-color: lightblue;
+}
+
+.student-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  margin: 1em;
+
+  background-color: lightpink;
+}
+
+.house-crest {
+  max-width: 5em;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 100px;
+}

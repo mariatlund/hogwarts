@@ -12,16 +12,96 @@
       <h1>Hogwarts Student List</h1>
     </header>
     <main>
-      <section class="actions"></section>
+      <section class="menu">
+        <h2>Actions</h2>
+
+        <div class="filtering">
+          <h3>Filter by:</h3>
+          <select name="filter-options" id="filter-options">
+            <option value="0">House</option>
+            <option value="1">Inquisitors</option>
+            <option value="2">Prefects</option>
+            <option value="3">Expelled students</option>
+            <option value="4">Non-expelled students</option>
+          </select>
+        </div>
+
+        <div class="sorting">
+          <h3>Sort:</h3>
+          <select name="sort-options" id="sort-options">
+            <option value="0">Alphabetical - First Names (A-Z)</option>
+            <option value="1">Alphabetical - Last Names (A-Z)</option>
+            <option value="2">By House</option>
+            <option value="3">By Roles</option>
+          </select>
+        </div>
+
+        <div class="searching">
+          <h3>Search:</h3>
+          <input type="text" id="searchInput" name="searchInput" />
+        </div>
+
+        <div class="list-info">
+          <p class="total-students">Total Students:</p>
+          <p class="expelled-students">Expelled Students:</p>
+          <p class="gryffindor-students">Gryffindor Students:</p>
+          <p class="slytherin-students">Slytherin Students:</p>
+          <p class="hufflepuff-students">Hufflepuff Students:</p>
+          <p class="ravenclaw-students">Ravenclaw Students:</p>
+        </div>
+      </section>
+
       <section class="list">
         <div class="student-container">
-          <img src="#" alt="student photo" />
+          <img src="images/abbott_h.png" alt="student photo" />
           <p class="name">FirstName MiddleName LastName</p>
           <p class="house">House</p>
           <p class="inquisitor">Inquisitor</p>
           <p class="prefect">Prefect</p>
+          <img src="assets/hogwarts-crest.jpg" alt="house crest" class="house-crest" />
+        </div>
+        <div class="student-container">
+          <img src="images/abbott_h.png" alt="student photo" />
+          <p class="name">FirstName MiddleName LastName</p>
+          <p class="house">House</p>
+          <p class="inquisitor">Inquisitor</p>
+          <p class="prefect">Prefect</p>
+          <img src="assets/hogwarts-crest.jpg" alt="house crest" class="house-crest" />
+        </div>
+        <div class="student-container">
+          <img src="images/abbott_h.png" alt="student photo" />
+          <p class="name">FirstName MiddleName LastName</p>
+          <p class="house">House</p>
+          <p class="inquisitor">Inquisitor</p>
+          <p class="prefect">Prefect</p>
+          <img src="assets/hogwarts-crest.jpg" alt="house crest" class="house-crest" />
+        </div>
+        <div class="student-container">
+          <img src="images/abbott_h.png" alt="student photo" />
+          <p class="name">FirstName MiddleName LastName</p>
+          <p class="house">House</p>
+          <p class="inquisitor">Inquisitor</p>
+          <p class="prefect">Prefect</p>
+          <img src="assets/hogwarts-crest.jpg" alt="house crest" class="house-crest" />
         </div>
       </section>
+
+      <div class="student-modal hidden">
+        <img src="images/abbott_h.png" alt="student photo" />
+        <p class="student-name">FirstName MiddleName LastName</p>
+        <p class="nickname">Nickname</p>
+        <p class="blood-status">Blood status</p>
+        <img src="assets/hogwarts-crest.jpg" alt="house crest" />
+        <p class="house-name">House name</p>
+        <p class="prefect"></p>
+        <p class="inquisitor"></p>
+
+        <div class="buttons">
+          <button type="button">Make prefect</button>
+          <button type="button">Make inquisitor</button>
+          <button type="button">Expel student</button>
+        </div>
+      </div>
     </main>
     <footer></footer>
     <script src="script.js"></script>
