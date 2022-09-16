@@ -5,6 +5,10 @@
   padding: 0;
 }
 
+/* body {
+  background-color: darkgray;
+} */
+
 main {
   display: grid;
   /* grid-template-columns: 1fr 2fr; */
@@ -12,15 +16,15 @@ main {
   grid-gap: 1em;
 }
 
-.hidden {
-  display: none;
+h1 {
+  margin-left: 0.5em;
 }
 
 /* ACTIONS MENU */
 .menu {
   background-color: lightgray;
   height: calc(100vh - 6.5em);
-  width: 17em;
+  width: 18vw;
   padding: 1em;
 
   display: grid;
@@ -41,26 +45,146 @@ main {
 
 /* STUDENT LIST */
 .list {
-  margin-left: 20em;
+  margin-left: 22vw;
 
   display: grid;
   grid-template-columns: 1fr 1fr;
 
-  background-color: lightblue;
+  background-color: lightgray;
 }
 
 .student-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.5fr 2fr;
 
   margin: 1em;
+  padding: 0.5em;
 
-  background-color: lightpink;
+  background-color: white;
+  border-radius: 5px;
+
+  align-items: center;
+
+  font-size: 80%;
 }
 
-.house-crest {
-  max-width: 5em;
+.student-photo {
+  justify-self: center;
+}
+
+.student-photo img {
+  width: 4.5em;
+}
+
+.student-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name-and-house {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.roles-and-crest {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.house-crest img {
+  width: 3em;
   aspect-ratio: 1/1;
   object-fit: cover;
   border-radius: 100px;
+}
+
+/* STUDENT DETAILS MODAL */
+
+.student-modal {
+  position: fixed;
+  margin-left: 44vw;
+  margin-top: 25vh;
+  padding: 2em;
+  border-radius: 5px;
+
+  background-color: lightgray;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1em;
+
+  justify-items: center;
+}
+
+.modal-info {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1em;
+
+  align-items: center;
+}
+
+.modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.modal-image img {
+  max-width: 10em;
+}
+
+.modal-house {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: end;
+  margin-top: -2em;
+}
+
+.modal-house img {
+  max-width: 4em;
+  aspect-ratio: 1/1;
+  border-radius: 100px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  /* justify-items: flex-start; */
+}
+
+button {
+  margin-inline: 2em;
+  margin-top: 1em;
+  padding: 0.5em;
+  /* align-self: start; */
+}
+
+.close {
+  background-image: url(assets/close-icon.svg);
+  aspect-ratio: 1/1;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1em;
+
+  position: absolute;
+  align-self: flex-start;
+  justify-self: flex-end;
+  margin: 0.5em;
+}
+
+.student-name {
+  font-weight: bold;
+}
+
+.hidden {
+  display: none;
 }
