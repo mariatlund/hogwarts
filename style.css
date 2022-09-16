@@ -5,27 +5,75 @@
   padding: 0;
 }
 
-/* body {
-  background-color: darkgray;
-} */
+@font-face {
+  font-family: Wizard;
+  src: url("fonts/WizardWorldSimplified-Kxr7.ttf");
+}
+
+@font-face {
+  font-family: Merriweather;
+  src: url("fonts/Merriweather/Merriweather-Regular.ttf");
+}
+
+:root {
+  /*color palette*/
+  --grey: #999d96;
+  --light_grey: #e2e8dd;
+  --green: #709775;
+  --dark_green: #1b4332;
+  --bg_color: #1e352f;
+  --font_color: #0d272b;
+
+  /*typography*/
+
+  /*margins and paddings*/
+
+  /*shadows*/
+  --shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+body {
+  background-color: var(--bg_color);
+  font-family: Merriweather;
+}
 
 main {
   display: grid;
   /* grid-template-columns: 1fr 2fr; */
   margin: 1em;
+  margin-top: 4em;
   grid-gap: 1em;
+}
+
+header {
+  position: fixed;
+  margin-top: -4em;
+
+  background-color: var(--green);
+  width: 100%;
+  padding: 0.5em;
+
+  z-index: 5;
 }
 
 h1 {
   margin-left: 0.5em;
+  font-family: Wizard;
+  color: var(--font_color);
+}
+
+h2 {
+  font-family: Wizard;
 }
 
 /* ACTIONS MENU */
 .menu {
-  background-color: lightgray;
+  background-color: var(--green);
+  color: var(--font_color);
   height: calc(100vh - 6.5em);
   width: 18vw;
   padding: 1em;
+  border-radius: 5px;
 
   display: grid;
   grid-template-columns: 1fr;
@@ -34,6 +82,7 @@ h1 {
   align-content: start;
 
   position: fixed;
+  z-index: 5;
 }
 
 .list-info {
@@ -43,6 +92,20 @@ h1 {
   margin-top: 2em;
 }
 
+.input-submit {
+  display: grid;
+  grid-template-columns: 1fr 0.25fr;
+  align-items: center;
+}
+
+#searchInput {
+  height: 1.5em;
+}
+
+.search-submit {
+  margin: 0.5em;
+}
+
 /* STUDENT LIST */
 .list {
   margin-left: 22vw;
@@ -50,7 +113,8 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
 
-  background-color: lightgray;
+  background-color: var(--dark_green);
+  border-radius: 5px;
 }
 
 .student-container {
@@ -60,12 +124,13 @@ h1 {
   margin: 1em;
   padding: 0.5em;
 
-  background-color: white;
+  background-color: var(--light_grey);
   border-radius: 5px;
 
   align-items: center;
 
   font-size: 80%;
+  /* box-shadow: var(--shadow); */
 }
 
 .student-photo {
@@ -74,6 +139,21 @@ h1 {
 
 .student-photo img {
   width: 4.5em;
+}
+
+.expelled {
+  transform: rotate(-45deg);
+  position: absolute;
+  margin-top: 1.75em;
+  margin-left: -0.5em;
+  font-weight: bold;
+  color: var(--light_grey);
+  background-color: darkred;
+  z-index: 2;
+}
+
+.expelled-img {
+  filter: grayscale(100%);
 }
 
 .student-info {
