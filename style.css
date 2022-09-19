@@ -38,11 +38,8 @@ body {
 }
 
 main {
-  display: grid;
-  /* grid-template-columns: 1fr 2fr; */
   margin: 1em;
   margin-top: 4em;
-  grid-gap: 1em;
 }
 
 header {
@@ -52,6 +49,7 @@ header {
   background-color: var(--green);
   width: 100%;
   padding: 0.5em;
+  box-shadow: var(--shadow);
 
   z-index: 5;
 }
@@ -71,9 +69,10 @@ h2 {
   background-color: var(--green);
   color: var(--font_color);
   height: calc(100vh - 6.5em);
-  width: 18vw;
+  width: 17vw;
   padding: 1em;
   border-radius: 5px;
+  box-shadow: var(--shadow);
 
   display: grid;
   grid-template-columns: 1fr;
@@ -88,7 +87,7 @@ h2 {
 .list-info {
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: 0.5em;
+  grid-gap: 0.75em;
   margin-top: 2em;
 }
 
@@ -106,9 +105,15 @@ h2 {
   margin: 0.5em;
 }
 
+#filter-options,
+#sort-options {
+  width: 100%;
+  padding: 0.5em;
+}
+
 /* STUDENT LIST */
 .list {
-  margin-left: 22vw;
+  margin-left: 20vw;
 
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -267,4 +272,10 @@ button {
 
 .hidden {
   display: none;
+}
+
+/* EFFECTS */
+
+.student-container:hover {
+  transform: scale(103%);
 }
