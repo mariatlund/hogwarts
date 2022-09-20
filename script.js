@@ -2,80 +2,121 @@
 
 window.addEventListener("DOMContentLoaded", start);
 
-// DECLARE GLOBAL VARIABLES & SETTINGS
+// ---------- DECLARE GLOBAL VARIABLES & SETTINGS ----------
+const url = "https://petlatkea.dk/2021/hogwarts/students.json";
+const bloodURL = "https://petlatkea.dk/2021/hogwarts/families.json";
+
 // array of all students
 let allStudents = [];
 
 // create prototype for student objects
 const Student = {
-  // firstname
-  // middlename
-  // lastname
-  // nickname
-  // house
-  // gender
-  // inquisitor
-  // prefect
-  // bloodstatus
+  firstName: "",
+  middleName: "",
+  lastName: "",
+  nickName: "",
+  house: "",
+  gender: "",
+  image: "",
+  inquisitor: false,
+  prefect: false,
+  bloodStatus: "",
+  expelled: false,
 };
 
-// array of settings for filtering, sorting, search (?)
+// array of settings for filtering, sorting, search
 const settings = {
-  // filterBy
-  // sortBy
-  // sortDir
+  filterBy: "all",
+  sortBy: "firstName",
+  sortDir: "asc",
+  searchBy: "",
 };
 
 function start() {
   console.log("ready");
 
   // call functions to prepare next steps
-  // loadJSON();
+  loadJSON();
 
   // add event listeners to buttons - filtering, sorting, search
-  // prepareFilter();
-  // prepareSort();
-
-  // add event listeners to student containers
-  //   prepareStudents();
+  registerButtons();
 }
 
-// LOAD STUDENT JSON DATA & ADD TO ARRAY AS OBJECTS
+// ---------- LOAD STUDENT JSON DATA & ADD TO ARRAY AS OBJECTS ----------
 
 async function loadJSON() {
-  const response = await fetch("hogwarts-data/hogwartsdata.js");
-  const jsonData = await response.json();
-
-  // when loaded, prepare data objects
+  fetch(url)
+    .then((response) => response.json())
+    .then((jsonData) => {
+      // when loaded, prepare data objects
+      prepareObjects(jsonData);
+    });
 }
 
 function prepareObjects(jsonData) {
   // add data into array containing all students
   allStudents = jsonData.map(createStudent);
 
-  displayList(allStudents);
+  buildList(allStudents);
 }
 
 function createStudent(jsonObject) {
   // create a student object with the json data
   const student = Object.create(Student);
 
-  // set the student properties, e.g.:
-  // let firstName = getFirstName();
-  // student.firstName = firstName;
+  // -- NAMES --
+  // create name array
+  const fullNameArr = jsonObject.fullname.trim().split(" ");
+  // first name
+  student.firstName = fullNameArr[0].charAt(0).toUpperCase() + fullNameArr[0].substring(1).toLowerCase();
+  // last name
+  student.lastName = fullNameArr.at(-1).charAt(0).toUpperCase() + fullNameArr.at(-1).substring(1).toLowerCase();
+  // middle name - check if student has one
+  if (jsonObject.fullname.trim().indexOf(" ") === jsonObject.fullname.trim().lastIndexOf(" ")) {
+    student.middleName = "";
+  } else {
+    student.middleName = jsonObject.fullname.trim().substring(jsonObject.fullname.trim().indexOf(" ") + 1, jsonObject.fullname.trim().lastIndexOf(" "));
+  }
+  // middle name - capitalize
+  student.middleName = student.middleName.charAt(0).toUpperCase() + student.middleName.substring(1).toLowerCase();
+  // nickname
+  student.nickName = jsonObject.fullname.substring(jsonObject.fullname.indexOf('"') + 1, jsonObject.fullname.lastIndexOf('"'));
+  // problem with ernie, his nickname gets set as his middle name
 
-  // do this for all properties, call helper functions that extract the information from the json data
+  // -- HOUSE --
+  student.house = jsonObject.house.trim();
+  student.house = student.house.charAt(0).toUpperCase() + student.house.substring(1).toLowerCase();
+
+  // -- GENDER --
+  student.gender = jsonObject.gender;
+
+  // -- IMAGES --
+  if (student.lastName === "Patil") {
+    student.image = `images/${student.lastName.toLowerCase()}_${student.firstName.toLowerCase()}.png`;
+  } else if (student.lastName === "Finch-fletchley") {
+    const finchFletch = student.lastName.split("-");
+    student.image = `images/${finchFletch[1].toLowerCase()}_${student.firstName.charAt(0).toLowerCase()}.png`;
+    // student.lastName = finchFletch[1].charAt(0).toUpperCase() + finchFletch[1].substring(1).toLowerCase();
+    // student.middleName = finchFletch[0];
+  } else {
+    student.image = `images/${student.lastName.toLowerCase()}_${student.firstName.charAt(0).toLowerCase()}.png`;
+  }
+
+  console.log("Student Object:", student);
 
   return student;
 }
 
-// DISPLAYING STUDENTS
+//  ---------- DISPLAYING STUDENTS ----------
+
+function buildList() {}
 
 function displayList(students) {
   // make sure list is empty
   // document.queryselector.("student-list").innerHTML = "";
   // build a new list
   // students.forEach(displayStudent);
+  // add event listeners to student containers
 }
 
 function displayStudent(student) {
@@ -83,3 +124,21 @@ function displayStudent(student) {
   // add data to the correct clone fields
   // append to student list
 }
+
+//  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
+function registerButtons() {
+  // add eventlisteners to: filter by options, sort options, search (use keydown/keyup event)
+}
+
+// function search() {
+//   // make variable for input value in search field
+//   const searchTerm = document.querySelector("#searchInput").value;
+//   settings.searchBy = searchTerm.toLowerCase();
+
+//   const searchResults = allStudents.filter(studentSearch);
+//   // use closure(?) with a function that checks if the student last or first name match the searchBy value
+//   function studentSearch(student) {
+//     if (student.firstName.toLowerCase().includes(settings.searchBy) || student.lastName.toLowerCase().includes(settings.searchBy)) return student;
+//   }
+//   displayList(searchResults);
+// }
