@@ -136,7 +136,13 @@ function displayStudent(student) {
   clone.querySelector(".house").textContent = student.house;
   clone.querySelector(".house-img").src = `assets/${student.house.toLowerCase()}-crest.jpg`;
   clone.querySelector(".house-img").alt = student.house;
-  // roles (use if statements)
+  // roles
+  if (student.prefect === true) {
+    clone.querySelector(".prefect").classList.remove("hidden");
+  }
+  if (student.inquisitor === true) {
+    clone.querySelector(".inquisitor").classList.remove("hidden");
+  }
   // add event listeners to student containers (?)
   clone.querySelector(".student-container").addEventListener("click", () => {
     openStudentModal(student);
@@ -148,8 +154,6 @@ function displayStudent(student) {
 // ---------- MODALS - STUDENT DETAILS, WARNINGS, ETC. ----------
 function openStudentModal(student) {
   console.log("open modal");
-  // clear modal info
-  // document.querySelector(".student-modal").innerHTML = "";
   // add student info to modal
   document.querySelector(".modal-img").src = student.image;
   document.querySelector(".student-name").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`;
@@ -158,7 +162,13 @@ function openStudentModal(student) {
   document.querySelector(".modal-house-img").src = `assets/${student.house.toLowerCase()}-crest.jpg`;
   document.querySelector(".modal-house-img").alt = student.house;
   // show prefect status
+  if (student.prefect === true) {
+    clone.querySelector(".modal-prefect").classList.remove("hidden");
+  }
   // show inquisitor status
+  if (student.inquisitor === true) {
+    clone.querySelector(".modal-inquisitor").classList.remove("hidden");
+  }
   // add eventlistener to close button
   document.querySelector(".close").addEventListener("click", closeStudentModal);
   // make modal visible
@@ -169,6 +179,11 @@ function closeStudentModal() {
   console.log("close modal");
   document.querySelector(".student-modal").classList.toggle("hidden");
 }
+
+// ---------- STUDENT ADMINISTRATOR ACTIONS ----------
+// make a student a prefect (only one girl and one boy) - provide warning message when overriding existing prefect
+// make a student an inquisitor
+// expelling a student
 
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
 function registerButtons() {
