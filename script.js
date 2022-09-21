@@ -138,22 +138,36 @@ function displayStudent(student) {
   clone.querySelector(".house-img").alt = student.house;
   // roles (use if statements)
   // add event listeners to student containers (?)
-  clone.querySelector(".student-container").addEventListener("click", openStudentModal);
+  clone.querySelector(".student-container").addEventListener("click", () => {
+    openStudentModal(student);
+  });
   // append to student list
   document.querySelector(".list").appendChild(clone);
 }
 
 // ---------- MODALS - STUDENT DETAILS, WARNINGS, ETC. ----------
 function openStudentModal(student) {
-  console.log("open Modal");
+  console.log("open modal");
   // clear modal info
   // document.querySelector(".student-modal").innerHTML = "";
   // add student info to modal
   document.querySelector(".modal-img").src = student.image;
   document.querySelector(".student-name").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`;
   document.querySelector(".nickname").textContent = student.nickName;
-
+  document.querySelector(".house-name").textContent = student.house;
+  document.querySelector(".modal-house-img").src = `assets/${student.house.toLowerCase()}-crest.jpg`;
+  document.querySelector(".modal-house-img").alt = student.house;
+  // show prefect status
+  // show inquisitor status
+  // add eventlistener to close button
+  document.querySelector(".close").addEventListener("click", closeStudentModal);
+  // make modal visible
   document.querySelector(".student-modal").classList.remove("hidden");
+}
+
+function closeStudentModal() {
+  console.log("close modal");
+  document.querySelector(".student-modal").classList.toggle("hidden");
 }
 
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------

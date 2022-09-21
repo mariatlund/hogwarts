@@ -138,6 +138,10 @@ h2 {
   /* box-shadow: var(--shadow); */
 }
 
+.student-container:hover {
+  cursor: pointer;
+}
+
 .student-photo {
   justify-self: center;
 }
@@ -265,6 +269,10 @@ button {
   align-self: flex-start;
   justify-self: flex-end;
   margin: 0.5em;
+}
+
+.close:hover {
+  cursor: pointer;
 }
 
 .student-name {
