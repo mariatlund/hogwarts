@@ -194,18 +194,19 @@ h2 {
 
 .student-modal {
   position: fixed;
-  margin-left: 44vw;
-  margin-top: 25vh;
+  top: 40%;
+  left: 40%;
   padding: 2em;
   border-radius: 5px;
 
-  background-color: lightgray;
+  background-color: var(--green);
 
   display: grid;
   grid-template-columns: 1fr;
   gap: 1em;
 
   justify-items: center;
+  z-index: 5;
 }
 
 .modal-info {

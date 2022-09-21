@@ -109,20 +109,51 @@ function createStudent(jsonObject) {
 
 //  ---------- DISPLAYING STUDENTS ----------
 
-function buildList() {}
+function buildList() {
+  // display list with selected students - change this later with filtering and sorting?
+  displayList(allStudents);
+  // display list stats in side menu - add later
+}
 
 function displayList(students) {
   // make sure list is empty
-  // document.queryselector.("student-list").innerHTML = "";
+  document.querySelector(".list").innerHTML = "";
   // build a new list
-  // students.forEach(displayStudent);
-  // add event listeners to student containers
+  students.forEach(displayStudent);
 }
 
 function displayStudent(student) {
   // clone template
+  const clone = document.querySelector(".studentTemplate").content.cloneNode(true);
+
   // add data to the correct clone fields
+  // name
+  clone.querySelector(".name").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`;
+  // image
+  clone.querySelector(".student-img").src = student.image;
+  clone.querySelector(".student-img").alt = `${student.firstName} ${student.lastName}`;
+  // house
+  clone.querySelector(".house").textContent = student.house;
+  clone.querySelector(".house-img").src = `assets/${student.house.toLowerCase()}-crest.jpg`;
+  clone.querySelector(".house-img").alt = student.house;
+  // roles (use if statements)
+  // add event listeners to student containers (?)
+  clone.querySelector(".student-container").addEventListener("click", openStudentModal);
   // append to student list
+  document.querySelector(".list").appendChild(clone);
+}
+
+// ---------- MODALS - STUDENT DETAILS, WARNINGS, ETC. ----------
+function openStudentModal(student) {
+  console.log("open Modal");
+  // clear modal info
+  // document.querySelector(".student-modal").innerHTML = "";
+  // add student info to modal
+  document.querySelector(".modal-img").src = student.image;
+  document.querySelector(".student-name").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`;
+  document.querySelector(".nickname").textContent = student.nickName;
+
+  document.querySelector(".student-modal").classList.remove("hidden");
 }
 
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
