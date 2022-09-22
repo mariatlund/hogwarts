@@ -32,14 +32,15 @@ const settings = {
   searchBy: "",
 };
 
-function start() {
+async function start() {
   console.log("ready");
 
   // call functions to prepare next steps
   loadJSON();
+  // const bloodJSON = await loadBlood();
 
   // add event listeners to buttons - filtering, sorting, search
-  registerButtons();
+  registerInputFields();
 }
 
 // ---------- LOAD STUDENT JSON DATA & ADD TO ARRAY AS OBJECTS ----------
@@ -57,7 +58,7 @@ function prepareObjects(jsonData) {
   // add data into array containing all students
   allStudents = jsonData.map(createStudent);
 
-  buildList(allStudents);
+  displayList(allStudents);
 }
 
 function createStudent(jsonObject) {
@@ -109,13 +110,14 @@ function createStudent(jsonObject) {
 
 //  ---------- DISPLAYING STUDENTS ----------
 
-function buildList() {
-  // display list with selected students - change this later with filtering and sorting?
-  displayList(allStudents);
-  // display list stats in side menu - add later
-}
+// function buildList() {
+//   // display list with selected students - change this later with filtering and sorting?
+//   displayList(allStudents);
+//   // display list stats in side menu - add later
+// }
 
 function displayList(students) {
+  console.log("display list");
   // make sure list is empty
   document.querySelector(".list").innerHTML = "";
   // build a new list
@@ -153,7 +155,7 @@ function displayStudent(student) {
 
 // ---------- MODALS - STUDENT DETAILS, WARNINGS, ETC. ----------
 function openStudentModal(student) {
-  console.log("open modal");
+  // console.log("open modal");
   // add student info to modal
   document.querySelector(".modal-img").src = student.image;
   document.querySelector(".student-name").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`;
@@ -161,6 +163,9 @@ function openStudentModal(student) {
   document.querySelector(".house-name").textContent = student.house;
   document.querySelector(".modal-house-img").src = `assets/${student.house.toLowerCase()}-crest.jpg`;
   document.querySelector(".modal-house-img").alt = student.house;
+  // show house styling
+  document.querySelector(".student-modal").classList.add(`${student.house.toLowerCase()}`);
+
   // show prefect status
   if (student.prefect === true) {
     clone.querySelector(".modal-prefect").classList.remove("hidden");
@@ -176,19 +181,106 @@ function openStudentModal(student) {
 }
 
 function closeStudentModal() {
-  console.log("close modal");
+  // console.log("close modal");
   document.querySelector(".student-modal").classList.toggle("hidden");
+  document.querySelector(".student-modal").classList.remove("gryffindor", "slytherin", "ravenclaw", "hufflepuff");
 }
 
 // ---------- STUDENT ADMINISTRATOR ACTIONS ----------
+// PREFECTS
 // make a student a prefect (only one girl and one boy) - provide warning message when overriding existing prefect
-// make a student an inquisitor
-// expelling a student
+
+// INQUISITORS
+// make a student an inquisitor (based on given conditions - full blood or slytherin)
+
+// EXPELLING
+// check animal winners exercise
+// use flags/toggle
+// maybe have three arrays: allStudents, currentStudents (use this for filtering), expelledStudents
+// could also use filtering
 
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
-function registerButtons() {
+function registerInputFields() {
   // add eventlisteners to: filter by options, sort options, search (use keydown/keyup event)
+  console.log("registerInputFields");
+  document.querySelector("#filter-options").addEventListener("change", setFilter);
 }
+
+// FILTERING
+function setFilter(event) {
+  // select filter with input value
+  const filter = event.target.value;
+  // update filterby value in settings object
+  settings.filterBy = filter;
+  console.log("setFilter:", filter);
+  buildList();
+}
+
+function buildList() {
+  // console.log("buildList");
+  // create filtered array
+  const currentList = filterList(allStudents);
+  // const sortedList = sortList(currentList);
+
+  // displayList(sortedList);
+  displayList(currentList);
+}
+
+function filterList(filteredList) {
+  console.log("filterList");
+  if (settings.filterBy === "gryffindor") {
+    filteredList = allStudents.filter(isGryffindor);
+  }
+  if (settings.filterBy === "slytherin") {
+    filteredList = allStudents.filter(isSlytherin);
+  }
+  if (settings.filterBy === "hufflepuff") {
+    filteredList = allStudents.filter(isHufflepuff);
+  }
+  if (settings.filterBy === "ravenclaw") {
+    filteredList = allStudents.filter(isRavenclaw);
+  }
+
+  return filteredList;
+}
+
+// filter functions
+function isGryffindor(student) {
+  if (student.house === "Gryffindor") {
+    return true;
+  }
+  return false;
+}
+function isSlytherin(student) {
+  if (student.house === "Slytherin") {
+    return true;
+  }
+  return false;
+}
+function isHufflepuff(student) {
+  if (student.house === "Hufflepuff") {
+    return true;
+  }
+  return false;
+}
+function isRavenclaw(student) {
+  if (student.house === "Ravenclaw") {
+    return true;
+  }
+  return false;
+}
+
+// isInquisitor
+// isPrefect
+// isExpelled
+// isNotExpelled
+
+// SORTING
+// select sorting (use sortBy value from settings)
+// sortAZ
+// sortZA
+// sortHouse
+// sortRoles
 
 // function search() {
 //   // make variable for input value in search field
@@ -202,3 +294,8 @@ function registerButtons() {
 //   }
 //   displayList(searchResults);
 // }
+
+//  ---------- BLOOD STATUS ----------
+// load both json files
+// create arrays/objects (?)
+// forEach student -> check if name is in half/pure list and set bloodStatus, if not in either, set to muggle, if in both, decide whether to set as half or pure

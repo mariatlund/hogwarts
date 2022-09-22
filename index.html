@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hacked Hogwarts Student List</title>
     <link rel="stylesheet" href="style.css" />
+    <meta name="ROBOTS" content="NOINDEX, NOFOLLOW" />
   </head>
   <body>
     <header>
@@ -18,19 +19,23 @@
         <div class="filtering">
           <h3>Filter by:</h3>
           <select name="filter-options" id="filter-options">
-            <option value="0">House</option>
-            <option value="1">Inquisitors</option>
-            <option value="2">Prefects</option>
-            <option value="3">Expelled students</option>
-            <option value="4">Non-expelled students</option>
+            <option value="all">All</option>
+            <option value="gryffindor">Gryffindor</option>
+            <option value="slytherin">Slytherin</option>
+            <option value="hufflepuff">Hufflepuff</option>
+            <option value="ravenclaw">Ravenclaw</option>
+            <option value="inquisitor">Inquisitors</option>
+            <option value="prefect">Prefects</option>
+            <option value="expelled">Expelled students</option>
+            <option value="notExpelled">Non-expelled students</option>
           </select>
         </div>
 
         <div class="sorting">
           <h3>Sort:</h3>
           <select name="sort-options" id="sort-options">
-            <option value="0">Alphabetical - First Names (A-Z)</option>
-            <option value="1">Alphabetical - Last Names (A-Z)</option>
+            <option value="0">First Names (A-Z)</option>
+            <option value="1">First Names (Z-A)</option>
             <option value="2">By House</option>
             <option value="3">By Roles</option>
           </select>
@@ -39,8 +44,7 @@
         <div class="searching">
           <h3>Search:</h3>
           <div class="input-submit">
-            <input type="text" id="searchInput" name="searchInput" />
-            <button type="submit" class="search-submit">Search</button>
+            <input type="text" id="searchInput" name="searchInput" placeholder="Type here..." />
           </div>
         </div>
 
