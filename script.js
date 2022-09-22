@@ -8,6 +8,10 @@ const bloodURL = "https://petlatkea.dk/2021/hogwarts/families.json";
 
 // array of all students
 let allStudents = [];
+// array of currently displayed students
+let currentStudents = [];
+// array of expelled students
+let expelledStudents = [];
 
 // create prototype for student objects
 const Student = {
@@ -27,8 +31,8 @@ const Student = {
 // array of settings for filtering, sorting, search
 const settings = {
   filterBy: "all",
-  sortBy: "firstName",
-  sortDir: "asc",
+  sortBy: "",
+  // sortDir: "asc",
   searchBy: "",
 };
 
@@ -103,7 +107,7 @@ function createStudent(jsonObject) {
     student.image = `images/${student.lastName.toLowerCase()}_${student.firstName.charAt(0).toLowerCase()}.png`;
   }
 
-  console.log("Student Object:", student);
+  // console.log("Student Object:", student);
 
   return student;
 }
@@ -122,6 +126,8 @@ function displayList(students) {
   document.querySelector(".list").innerHTML = "";
   // build a new list
   students.forEach(displayStudent);
+  currentStudents = students;
+  console.log("currentStudents:", currentStudents);
 }
 
 function displayStudent(student) {
@@ -186,23 +192,11 @@ function closeStudentModal() {
   document.querySelector(".student-modal").classList.remove("gryffindor", "slytherin", "ravenclaw", "hufflepuff");
 }
 
-// ---------- STUDENT ADMINISTRATOR ACTIONS ----------
-// PREFECTS
-// make a student a prefect (only one girl and one boy) - provide warning message when overriding existing prefect
-
-// INQUISITORS
-// make a student an inquisitor (based on given conditions - full blood or slytherin)
-
-// EXPELLING
-// check animal winners exercise
-// use flags/toggle
-// maybe have three arrays: allStudents, currentStudents (use this for filtering), expelledStudents
-// could also use filtering
-
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
 function registerInputFields() {
   // add eventlisteners to: filter by options, sort options, search (use keydown/keyup event)
   document.querySelector("#filter-options").addEventListener("change", setFilter);
+  document.querySelector("#sort-options").addEventListener("change", setSorting);
 }
 
 // -- FILTERING --
@@ -216,43 +210,43 @@ function setFilter(event) {
 }
 
 function buildList() {
-  // console.log("buildList");
+  console.log("buildList");
   // create filtered array
-  const currentList = filterList(allStudents);
-  // const sortedList = sortList(currentList);
+  const currentList = filterList(currentStudents);
+  const sortedList = sortList(currentList);
 
   // displayList(sortedList);
-  displayList(currentList);
+  displayList(sortedList);
 }
 
 function filterList(filteredList) {
   // console.log("filterList");
   // filtering by houses
   if (settings.filterBy === "gryffindor") {
-    filteredList = allStudents.filter(isGryffindor);
+    filteredList = currentStudents.filter(isGryffindor);
   }
   if (settings.filterBy === "slytherin") {
-    filteredList = allStudents.filter(isSlytherin);
+    filteredList = currentStudents.filter(isSlytherin);
   }
   if (settings.filterBy === "hufflepuff") {
-    filteredList = allStudents.filter(isHufflepuff);
+    filteredList = currentStudents.filter(isHufflepuff);
   }
   if (settings.filterBy === "ravenclaw") {
-    filteredList = allStudents.filter(isRavenclaw);
+    filteredList = currentStudents.filter(isRavenclaw);
   }
   // filtering by roles
   if (settings.filterBy === "inquisitor") {
-    filteredList = allStudents.filter(isInquisitor);
+    filteredList = currentStudents.filter(isInquisitor);
   }
   if (settings.filterBy === "prefect") {
-    filteredList = allStudents.filter(isPrefect);
+    filteredList = currentStudents.filter(isPrefect);
   }
   // filtering by expelled students / non-expelled students
   if (settings.filterBy === "expelled") {
-    filteredList = allStudents.filter(isExpelled);
+    filteredList = currentStudents.filter(isExpelled);
   }
   if (settings.filterBy === "notExpelled") {
-    filteredList = allStudents.filter(isNotExpelled);
+    filteredList = currentStudents.filter(isNotExpelled);
   }
 
   return filteredList;
@@ -311,6 +305,43 @@ function isNotExpelled(student) {
 
 // -- SORTING --
 // select sorting (use sortBy value from settings)
+function setSorting(event) {
+  // select sort option with input value
+  const sort = event.target.value;
+  // update filterby value in settings object
+  settings.sortBy = sort;
+  console.log("setSorting:", sort);
+  buildList();
+}
+
+function sortList(currentList) {
+  // console.log("filterList");
+  // filtering by houses
+  if (settings.sortBy === "nameAZ") {
+    currentList = currentStudents.sort(sortAZ);
+  }
+  if (settings.sortBy === "nameZA") {
+    currentList = currentStudents.sort(sortZA);
+  }
+
+  return currentList;
+}
+
+// sort functions
+function sortAZ(studentA, studentB) {
+  if (studentA.firstName > studentB.firstName) {
+    return 1;
+  }
+  return -1;
+}
+
+function sortZA(studentA, studentB) {
+  if (studentA.firstName < studentB.firstName) {
+    return 1;
+  }
+  return -1;
+}
+
 // sortAZ
 // sortZA
 // sortHouse
@@ -335,3 +366,16 @@ function isNotExpelled(student) {
 // load both json files
 // create arrays/objects (?)
 // forEach student -> check if name is in half/pure list and set bloodStatus, if not in either, set to muggle, if in both, decide whether to set as half or pure
+
+// ---------- STUDENT ADMINISTRATOR ACTIONS ----------
+// PREFECTS
+// make a student a prefect (only one girl and one boy) - provide warning message when overriding existing prefect
+
+// INQUISITORS
+// make a student an inquisitor (based on given conditions - full blood or slytherin)
+
+// EXPELLING
+// check animal winners exercise
+// use flags/toggle
+// maybe have three arrays: allStudents, currentStudents (use this for filtering), expelledStudents
+// could also use filtering
