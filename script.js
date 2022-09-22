@@ -202,11 +202,10 @@ function closeStudentModal() {
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
 function registerInputFields() {
   // add eventlisteners to: filter by options, sort options, search (use keydown/keyup event)
-  console.log("registerInputFields");
   document.querySelector("#filter-options").addEventListener("change", setFilter);
 }
 
-// FILTERING
+// -- FILTERING --
 function setFilter(event) {
   // select filter with input value
   const filter = event.target.value;
@@ -227,7 +226,8 @@ function buildList() {
 }
 
 function filterList(filteredList) {
-  console.log("filterList");
+  // console.log("filterList");
+  // filtering by houses
   if (settings.filterBy === "gryffindor") {
     filteredList = allStudents.filter(isGryffindor);
   }
@@ -239,6 +239,20 @@ function filterList(filteredList) {
   }
   if (settings.filterBy === "ravenclaw") {
     filteredList = allStudents.filter(isRavenclaw);
+  }
+  // filtering by roles
+  if (settings.filterBy === "inquisitor") {
+    filteredList = allStudents.filter(isInquisitor);
+  }
+  if (settings.filterBy === "prefect") {
+    filteredList = allStudents.filter(isPrefect);
+  }
+  // filtering by expelled students / non-expelled students
+  if (settings.filterBy === "expelled") {
+    filteredList = allStudents.filter(isExpelled);
+  }
+  if (settings.filterBy === "notExpelled") {
+    filteredList = allStudents.filter(isNotExpelled);
   }
 
   return filteredList;
@@ -270,17 +284,39 @@ function isRavenclaw(student) {
   return false;
 }
 
-// isInquisitor
-// isPrefect
-// isExpelled
-// isNotExpelled
+function isInquisitor(student) {
+  if (student.inquisitor === true) {
+    return true;
+  }
+  return false;
+}
+function isPrefect(student) {
+  if (student.prefect === true) {
+    return true;
+  }
+  return false;
+}
+function isExpelled(student) {
+  if (student.expelled === true) {
+    return true;
+  }
+  return false;
+}
+function isNotExpelled(student) {
+  if (student.expelled === false) {
+    return true;
+  }
+  return false;
+}
 
-// SORTING
+// -- SORTING --
 // select sorting (use sortBy value from settings)
 // sortAZ
 // sortZA
 // sortHouse
 // sortRoles
+
+// -- SEARCH --
 
 // function search() {
 //   // make variable for input value in search field
