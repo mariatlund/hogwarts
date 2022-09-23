@@ -62,7 +62,9 @@ function prepareObjects(jsonData) {
   // add data into array containing all students
   allStudents = jsonData.map(createStudent);
 
-  displayList(allStudents);
+  settings.activeArray = allStudents;
+
+  displayList(settings.activeArray);
 }
 
 function createStudent(jsonObject) {
@@ -113,12 +115,6 @@ function createStudent(jsonObject) {
 }
 
 //  ---------- DISPLAYING STUDENTS ----------
-
-// function buildList() {
-//   // display list with selected students - change this later with filtering and sorting?
-//   displayList(allStudents);
-//   // display list stats in side menu - add later
-// }
 
 function displayList(students) {
   console.log("display list");
@@ -196,6 +192,7 @@ function registerInputFields() {
   // add eventlisteners to: filter by options, sort options, search (use keydown/keyup event)
   document.querySelector("#filter-options").addEventListener("change", setFilter);
   document.querySelector("#sort-options").addEventListener("change", setSort);
+  document.querySelector("#searchInput").addEventListener("input", search);
 }
 
 function setFilter(event) {
@@ -355,18 +352,18 @@ function sortHouse(studentA, studentB) {
 
 // -- SEARCH --
 
-// function search() {
-//   // make variable for input value in search field
-//   const searchTerm = document.querySelector("#searchInput").value;
-//   settings.searchBy = searchTerm.toLowerCase();
+function search(ev) {
+  // make variable for input value in search field
+  const searchTerm = document.querySelector("#searchInput").value;
+  settings.searchBy = searchTerm.toLowerCase();
 
-//   const searchResults = allStudents.filter(studentSearch);
-//   // use closure(?) with a function that checks if the student last or first name match the searchBy value
-//   function studentSearch(student) {
-//     if (student.firstName.toLowerCase().includes(settings.searchBy) || student.lastName.toLowerCase().includes(settings.searchBy)) return student;
-//   }
-//   displayList(searchResults);
-// }
+  const searchResults = settings.activeArray.filter(studentSearch);
+  // use closure with a function that checks if the student last or first name match the searchBy value
+  function studentSearch(student) {
+    if (student.firstName.toLowerCase().includes(settings.searchBy) || student.lastName.toLowerCase().includes(settings.searchBy)) return student;
+  }
+  displayList(searchResults);
+}
 
 //  ---------- BLOOD STATUS ----------
 // load both json files
