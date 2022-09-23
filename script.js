@@ -9,7 +9,7 @@ const bloodURL = "https://petlatkea.dk/2021/hogwarts/families.json";
 // array of all students
 let allStudents = [];
 // array of currently displayed students
-let currentStudents = [];
+// let currentStudents = [];
 // array of expelled students
 let expelledStudents = [];
 
@@ -32,8 +32,8 @@ const Student = {
 const settings = {
   filterBy: "all",
   sortBy: "",
-  // sortDir: "asc",
   searchBy: "",
+  activeArray: [allStudents],
 };
 
 async function start() {
@@ -126,8 +126,7 @@ function displayList(students) {
   document.querySelector(".list").innerHTML = "";
   // build a new list
   students.forEach(displayStudent);
-  currentStudents = students;
-  console.log("currentStudents:", currentStudents);
+  // settings.activeArray = students;
 }
 
 function displayStudent(student) {
@@ -195,32 +194,24 @@ function closeStudentModal() {
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
 function registerInputFields() {
   // add eventlisteners to: filter by options, sort options, search (use keydown/keyup event)
-  document.querySelector("#filter-options").addEventListener("change", setFilterAndSort);
-  document.querySelector("#sort-options").addEventListener("change", setFilterAndSort);
+  document.querySelector("#filter-options").addEventListener("change", setFilter);
+  document.querySelector("#sort-options").addEventListener("change", setSort);
 }
 
-// -- FILTERING --
-// function setFilter(event) {
-//   // select filter with input value
-//   const filter = event.target.value;
-//   // update filterby value in settings object
-//   settings.filterBy = filter;
-//   console.log("setFilter:", filter);
-//   buildList();
-// }
-
-function setFilterAndSort(event) {
-  // select filter with input value
+function setFilter(event) {
+  // select filter with input value & update in settings
   const filter = event.target.value;
-  // update filterby value in settings object
   settings.filterBy = filter;
 
-  // select sort option with input value
+  console.log("setFilter:", filter);
+  buildList();
+}
+
+function setSort(event) {
+  // select sort option with input value & update in settings
   const sort = event.target.value;
-  // update sortBy value in settings object
   settings.sortBy = sort;
 
-  console.log("setFilter:", filter);
   console.log("setSorting:", sort);
   buildList();
 }
@@ -228,44 +219,47 @@ function setFilterAndSort(event) {
 function buildList() {
   console.log("buildList");
   // create filtered array
-  const currentList = filterList(currentStudents);
+  const currentList = filterList(allStudents);
   const sortedList = sortList(currentList);
 
   // displayList(sortedList);
   displayList(sortedList);
 }
 
+// -- FILTERING --
+
 function filterList(filteredList) {
   // console.log("filterList");
+  settings.activeArray = filteredList;
   // filtering by houses
   if (settings.filterBy === "gryffindor") {
-    filteredList = currentStudents.filter(isGryffindor);
+    settings.activeArray = allStudents.filter(isGryffindor);
   }
   if (settings.filterBy === "slytherin") {
-    filteredList = currentStudents.filter(isSlytherin);
+    settings.activeArray = allStudents.filter(isSlytherin);
   }
   if (settings.filterBy === "hufflepuff") {
-    filteredList = currentStudents.filter(isHufflepuff);
+    settings.activeArray = allStudents.filter(isHufflepuff);
   }
   if (settings.filterBy === "ravenclaw") {
-    filteredList = currentStudents.filter(isRavenclaw);
+    settings.activeArray = allStudents.filter(isRavenclaw);
   }
   // filtering by roles
   if (settings.filterBy === "inquisitor") {
-    filteredList = currentStudents.filter(isInquisitor);
+    settings.activeArray = allStudents.filter(isInquisitor);
   }
   if (settings.filterBy === "prefect") {
-    filteredList = currentStudents.filter(isPrefect);
+    settings.activeArray = allStudents.filter(isPrefect);
   }
   // filtering by expelled students / non-expelled students
   if (settings.filterBy === "expelled") {
-    filteredList = currentStudents.filter(isExpelled);
+    settings.activeArray = allStudents.filter(isExpelled);
   }
   if (settings.filterBy === "notExpelled") {
-    filteredList = currentStudents.filter(isNotExpelled);
+    settings.activeArray = allStudents.filter(isNotExpelled);
   }
 
-  return filteredList;
+  return settings.activeArray;
 }
 
 // filter functions
@@ -320,27 +314,22 @@ function isNotExpelled(student) {
 }
 
 // -- SORTING --
-// select sorting (use sortBy value from settings)
-// function setSorting(event) {
-//   // select sort option with input value
-//   const sort = event.target.value;
-//   // update filterby value in settings object
-//   settings.sortBy = sort;
-//   console.log("setSorting:", sort);
-//   buildList();
-// }
 
 function sortList(currentList) {
-  // console.log("filterList");
-  // filtering by houses
+  // settings.activeArray = currentList;
+  // console.log("sortList");
   if (settings.sortBy === "nameAZ") {
-    currentList = currentStudents.sort(sortAZ);
+    currentList = currentList.sort(sortAZ);
   }
   if (settings.sortBy === "nameZA") {
-    currentList = currentStudents.sort(sortZA);
+    currentList = currentList.sort(sortZA);
+  }
+  if (settings.sortBy === "house") {
+    currentList = currentList.sort(sortHouse);
   }
 
-  return currentList;
+  settings.activeArray = currentList;
+  return settings.activeArray;
 }
 
 // sort functions
@@ -350,18 +339,19 @@ function sortAZ(studentA, studentB) {
   }
   return -1;
 }
-
 function sortZA(studentA, studentB) {
   if (studentA.firstName < studentB.firstName) {
     return 1;
   }
   return -1;
 }
-
-// sortAZ
-// sortZA
-// sortHouse
-// sortRoles
+function sortHouse(studentA, studentB) {
+  if (studentA.house > studentB.house) {
+    return 1;
+  }
+  return -1;
+}
+// sortRoles (use double if statements?)
 
 // -- SEARCH --
 
@@ -393,7 +383,7 @@ function sortZA(studentA, studentB) {
 // EXPELLING
 // check animal winners exercise
 // use flags/toggle
-// maybe have three arrays: allStudents, currentStudents (use this for filtering), expelledStudents
+// maybe have three arrays: allStudents, activeArray (use this for filtering), expelledStudents
 // could also use filtering
 
 // ---------- HACKING ----------
