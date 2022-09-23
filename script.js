@@ -183,29 +183,45 @@ function openStudentModal(student) {
   // add eventlistener to close button
   document.querySelector(".close").addEventListener("click", closeStudentModal);
   // make modal visible
-  document.querySelector(".student-modal").classList.remove("hidden");
+  document.querySelector(".modal-wrapper").classList.remove("hidden");
 }
 
 function closeStudentModal() {
   // console.log("close modal");
-  document.querySelector(".student-modal").classList.toggle("hidden");
+  document.querySelector(".modal-wrapper").classList.toggle("hidden");
   document.querySelector(".student-modal").classList.remove("gryffindor", "slytherin", "ravenclaw", "hufflepuff");
 }
 
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
 function registerInputFields() {
   // add eventlisteners to: filter by options, sort options, search (use keydown/keyup event)
-  document.querySelector("#filter-options").addEventListener("change", setFilter);
-  document.querySelector("#sort-options").addEventListener("change", setSorting);
+  document.querySelector("#filter-options").addEventListener("change", setFilterAndSort);
+  document.querySelector("#sort-options").addEventListener("change", setFilterAndSort);
 }
 
 // -- FILTERING --
-function setFilter(event) {
+// function setFilter(event) {
+//   // select filter with input value
+//   const filter = event.target.value;
+//   // update filterby value in settings object
+//   settings.filterBy = filter;
+//   console.log("setFilter:", filter);
+//   buildList();
+// }
+
+function setFilterAndSort(event) {
   // select filter with input value
   const filter = event.target.value;
   // update filterby value in settings object
   settings.filterBy = filter;
+
+  // select sort option with input value
+  const sort = event.target.value;
+  // update sortBy value in settings object
+  settings.sortBy = sort;
+
   console.log("setFilter:", filter);
+  console.log("setSorting:", sort);
   buildList();
 }
 
@@ -305,14 +321,14 @@ function isNotExpelled(student) {
 
 // -- SORTING --
 // select sorting (use sortBy value from settings)
-function setSorting(event) {
-  // select sort option with input value
-  const sort = event.target.value;
-  // update filterby value in settings object
-  settings.sortBy = sort;
-  console.log("setSorting:", sort);
-  buildList();
-}
+// function setSorting(event) {
+//   // select sort option with input value
+//   const sort = event.target.value;
+//   // update filterby value in settings object
+//   settings.sortBy = sort;
+//   console.log("setSorting:", sort);
+//   buildList();
+// }
 
 function sortList(currentList) {
   // console.log("filterList");
@@ -379,3 +395,12 @@ function sortZA(studentA, studentB) {
 // use flags/toggle
 // maybe have three arrays: allStudents, currentStudents (use this for filtering), expelledStudents
 // could also use filtering
+
+// ---------- HACKING ----------
+// INSERT YOURSELF INTO THE LIST
+// create student object for yourself, then use .push() to add yourself into the array of students
+// when expelling, check if student.name === your name and show a warning that you cannot be expelled
+
+// BREAK BLOOD STATUS
+// pop through the students, modify blood status with condition (check flag?) and if flagged call loop to mess up blood status
+// BREAK INQUISITOR SQUAD
