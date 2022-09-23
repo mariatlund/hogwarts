@@ -3,15 +3,17 @@
 window.addEventListener("DOMContentLoaded", start);
 
 // ---------- DECLARE GLOBAL VARIABLES & SETTINGS ----------
-const url = "https://petlatkea.dk/2021/hogwarts/students.json";
+const studentsURL = "https://petlatkea.dk/2021/hogwarts/students.json";
 const bloodURL = "https://petlatkea.dk/2021/hogwarts/families.json";
 
 // array of all students
 let allStudents = [];
-// array of currently displayed students
-// let currentStudents = [];
 // array of expelled students
 let expelledStudents = [];
+// blood data arrays
+let pureBloods = [];
+let halfBloods = [];
+let muggles = [];
 
 // create prototype for student objects
 const Student = {
@@ -28,7 +30,7 @@ const Student = {
   expelled: false,
 };
 
-// array of settings for filtering, sorting, search
+// array of settings for filtering, sorting, search, active student array
 const settings = {
   filterBy: "all",
   sortBy: "none",
@@ -40,8 +42,11 @@ async function start() {
   console.log("ready");
 
   // call functions to prepare next steps
-  loadJSON();
-  // const bloodJSON = await loadBlood();
+  const studentJSON = await loadJSON();
+  const studentBlood = await loadBlood();
+  // when loaded, prepare data objects
+  prepareBlood(studentBlood);
+  prepareObjects(studentJSON);
 
   // add event listeners to buttons - filtering, sorting, search
   registerInputFields();
@@ -49,22 +54,28 @@ async function start() {
 
 // ---------- LOAD STUDENT JSON DATA & ADD TO ARRAY AS OBJECTS ----------
 
+// load student information json
 async function loadJSON() {
-  fetch(url)
-    .then((response) => response.json())
-    .then((jsonData) => {
-      // when loaded, prepare data objects
-      prepareObjects(jsonData);
-    });
+  const response = await fetch(studentsURL);
+  const jsonData = await response.json();
+
+  return jsonData;
+}
+
+// load blood json
+async function loadBlood() {
+  const response = await fetch(bloodURL);
+  const bloodData = await response.json();
+
+  return bloodData;
 }
 
 function prepareObjects(jsonData) {
   // add data into array containing all students
   allStudents = jsonData.map(createStudent);
-
   settings.activeArray = allStudents;
 
-  displayList(settings.activeArray);
+  displayList(settings.activeArray, pureBloods, halfBloods);
 }
 
 function createStudent(jsonObject) {
@@ -116,12 +127,13 @@ function createStudent(jsonObject) {
 
 //  ---------- DISPLAYING STUDENTS ----------
 
-function displayList(students) {
+function displayList(students, pureBloods, halfBloods) {
   console.log("display list");
   // make sure list is empty
   document.querySelector(".list").innerHTML = "";
   // build a new list
   students.forEach(displayStudent);
+  students.forEach(determineBloodStatus);
   // settings.activeArray = students;
 }
 
@@ -169,12 +181,14 @@ function openStudentModal(student) {
 
   // show prefect status
   if (student.prefect === true) {
-    clone.querySelector(".modal-prefect").classList.remove("hidden");
+    document.querySelector(".modal-prefect").classList.remove("hidden");
   }
   // show inquisitor status
   if (student.inquisitor === true) {
-    clone.querySelector(".modal-inquisitor").classList.remove("hidden");
+    document.querySelector(".modal-inquisitor").classList.remove("hidden");
   }
+  // show blood status
+  document.querySelector(".blood-status").textContent = student.bloodStatus;
   // add eventlistener to close button
   document.querySelector(".close").addEventListener("click", closeStudentModal);
   // make modal visible
@@ -383,9 +397,31 @@ function search() {
 }
 
 //  ---------- BLOOD STATUS ----------
-// load both json files
-// create arrays/objects (?)
-// forEach student -> check if name is in half/pure list and set bloodStatus, if not in either, set to muggle, if in both, decide whether to set as half or pure
+
+function prepareBlood(bloodData) {
+  // update blood arrays
+  pureBloods = bloodData.pure;
+  halfBloods = bloodData.half;
+
+  console.log("purebloods:", pureBloods);
+  console.log("halfbloods:", halfBloods);
+}
+
+function determineBloodStatus(student) {
+  // check if last name is in half/pure list and set bloodStatus, if not in either, set to muggle, if in both, decide whether to set as half or pure
+  if (pureBloods.includes(student.lastName)) {
+    student.bloodStatus = "Pure Blood";
+  }
+  if (pureBloods.includes(student.lastName) && halfBloods.includes(student.lastName)) {
+    student.bloodStatus = "Pure Blood";
+  }
+  if (halfBloods.includes(student.lastName)) {
+    student.bloodStatus = "Half Blood";
+  }
+  if (!pureBloods.includes(student.lastName) && !halfBloods.includes(student.lastName)) {
+    student.bloodStatus = "Muggleborn";
+  }
+}
 
 // ---------- STUDENT ADMINISTRATOR ACTIONS ----------
 // PREFECTS
