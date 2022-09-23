@@ -31,7 +31,7 @@ const Student = {
 // array of settings for filtering, sorting, search
 const settings = {
   filterBy: "all",
-  sortBy: "",
+  sortBy: "none",
   searchBy: "",
   activeArray: [allStudents],
 };
@@ -214,7 +214,7 @@ function setSort(event) {
 }
 
 function buildList() {
-  console.log("buildList");
+  // console.log("buildList");
   // create filtered array
   const currentList = filterList(allStudents);
   const sortedList = sortList(currentList);
@@ -313,13 +313,18 @@ function isNotExpelled(student) {
 // -- SORTING --
 
 function sortList(currentList) {
-  // settings.activeArray = currentList;
   // console.log("sortList");
-  if (settings.sortBy === "nameAZ") {
-    currentList = currentList.sort(sortAZ);
+  if (settings.sortBy === "firstNameAZ") {
+    currentList = currentList.sort(sortFirstNameAZ);
   }
-  if (settings.sortBy === "nameZA") {
-    currentList = currentList.sort(sortZA);
+  if (settings.sortBy === "lastNameAZ") {
+    currentList = currentList.sort(sortLastNameAZ);
+  }
+  if (settings.sortBy === "firstNameZA") {
+    currentList = currentList.sort(sortFirstNameZA);
+  }
+  if (settings.sortBy === "lastNameZA") {
+    currentList = currentList.sort(sortLastNameZA);
   }
   if (settings.sortBy === "house") {
     currentList = currentList.sort(sortHouse);
@@ -330,14 +335,26 @@ function sortList(currentList) {
 }
 
 // sort functions
-function sortAZ(studentA, studentB) {
+function sortFirstNameAZ(studentA, studentB) {
   if (studentA.firstName > studentB.firstName) {
     return 1;
   }
   return -1;
 }
-function sortZA(studentA, studentB) {
+function sortLastNameAZ(studentA, studentB) {
+  if (studentA.lastName > studentB.lastName) {
+    return 1;
+  }
+  return -1;
+}
+function sortFirstNameZA(studentA, studentB) {
   if (studentA.firstName < studentB.firstName) {
+    return 1;
+  }
+  return -1;
+}
+function sortLastNameZA(studentA, studentB) {
+  if (studentA.lastName < studentB.lastName) {
     return 1;
   }
   return -1;
@@ -348,11 +365,11 @@ function sortHouse(studentA, studentB) {
   }
   return -1;
 }
-// sortRoles (use double if statements?)
+// sort by last name
 
 // -- SEARCH --
 
-function search(ev) {
+function search() {
   // make variable for input value in search field
   const searchTerm = document.querySelector("#searchInput").value;
   settings.searchBy = searchTerm.toLowerCase();
