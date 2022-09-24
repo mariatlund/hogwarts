@@ -97,8 +97,20 @@ h2 {
 .list-info {
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: 0.75em;
+  grid-gap: 1.5em;
   margin-top: 2em;
+  margin-right: 2em;
+}
+
+.stats-wrapper {
+  display: grid;
+  gap: 0.5em;
+}
+
+.stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .input-submit {

@@ -134,7 +134,7 @@ function displayList(students, pureBloods, halfBloods) {
   // build a new list
   students.forEach(displayStudent);
   students.forEach(determineBloodStatus);
-  // settings.activeArray = students;
+  displayListStats();
 }
 
 function displayStudent(student) {
@@ -164,6 +164,22 @@ function displayStudent(student) {
   });
   // append to student list
   document.querySelector(".list").appendChild(clone);
+}
+
+// ---------- DISPLAYING LIST STATS ----------
+
+function displayListStats() {
+  // show number of currently displayed students
+  document.querySelector(".displayed-students").textContent = settings.activeArray.length;
+  // show total students
+  document.querySelector(".total-students").textContent = allStudents.length;
+  // show expelled students - expelled students array
+  document.querySelector(".expelled-students").textContent = expelledStudents.length;
+  // show students in each house - check for student.house value?
+  document.querySelector(".gryffindor-students").textContent = allStudents.filter(isGryffindor).length;
+  document.querySelector(".slytherin-students").textContent = allStudents.filter(isSlytherin).length;
+  document.querySelector(".hufflepuff-students").textContent = allStudents.filter(isHufflepuff).length;
+  document.querySelector(".ravenclaw-students").textContent = allStudents.filter(isRavenclaw).length;
 }
 
 // ---------- MODALS - STUDENT DETAILS, WARNINGS, ETC. ----------
@@ -403,8 +419,8 @@ function prepareBlood(bloodData) {
   pureBloods = bloodData.pure;
   halfBloods = bloodData.half;
 
-  console.log("purebloods:", pureBloods);
-  console.log("halfbloods:", halfBloods);
+  // console.log("purebloods:", pureBloods);
+  // console.log("halfbloods:", halfBloods);
 }
 
 function determineBloodStatus(student) {
