@@ -285,6 +285,7 @@ function closePrefectsModal() {
 
 // -- FEEDBACK POPUPS --
 function showFeedback(student) {
+  // inquisitor feedback popups
   if (settings.feedback === "inquisitorSuccess") {
     document.querySelector(".feedback").textContent = `${student.firstName} is now an inquisitor.`;
   }
@@ -296,20 +297,17 @@ function showFeedback(student) {
     document.querySelector(".feedback").textContent = "Only pure bloods and students from house Slytherin can join the inquisitorial squad.";
   }
 
+  // prefects feedback popups
+
+  // show message
   document.querySelector(".feedback-wrapper").classList.remove("hidden");
   document.querySelector(".feedback-wrapper").classList.add("fadeInAndOut");
+  // hide when animation is done
   document.querySelector(".feedback-wrapper").addEventListener("animationend", hideFeedback);
 }
 
 function hideFeedback() {
   document.querySelector(".feedback-wrapper").classList.add("hidden");
-
-  // document.querySelector(".feedback-wrapper").classList.add("fadeOut");
-  // document.querySelector(".feedback-wrapper").addEventListener("animationend", hide);
-
-  // function hide() {
-  //   document.querySelector(".feedback-wrapper").classList.add("hidden");
-  // }
 }
 
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
@@ -535,6 +533,39 @@ function determineBloodStatus(student) {
 }
 
 // ---------- STUDENT ADMINISTRATOR ACTIONS ----------
+
+// -- INQUISITORS --
+// make a student an inquisitor (based on given conditions - full blood or slytherin)
+
+function makeInquisitor(student) {
+  // if student is already an inquisitor
+  if (student.inquisitor === true) {
+    closeStudentModal();
+    // show feedback
+    settings.feedback = "inquisitorExists";
+    showFeedback(student);
+  }
+  // if student is full blood or house slytherin
+  if ((student.inquisitor === false && student.bloodStatus === "Pure Blood") || (student.inquisitor === false && student.house === "Slytherin")) {
+    // add to inquisitorial squad
+    addInquisitor(student);
+    buildList();
+    closeStudentModal();
+    // show feedback
+    settings.feedback = "inquisitorSuccess";
+    showFeedback(student);
+  }
+  if ((student.inquisitor === false && student.bloodStatus !== "Pure Blood") || (student.inquisitor === false && student.house !== "Slytherin")) {
+    console.log("Only pure bloods and students from house Slytherin can join the inquisitorial squad.");
+    settings.feedback = "inquisitorError";
+    showFeedback(student);
+  }
+
+  function addInquisitor(student) {
+    student.inquisitor = true;
+  }
+}
+
 // -- PREFECTS --
 // make a student a prefect (only one girl and one boy) - provide warning message when overriding existing prefect
 
@@ -590,38 +621,6 @@ function makePrefect(student, housePrefects) {
     closeStudentModal();
     // display list again to show prefect status
     displayList(settings.activeArray);
-  }
-}
-
-// -- INQUISITORS --
-// make a student an inquisitor (based on given conditions - full blood or slytherin)
-
-function makeInquisitor(student) {
-  // if student is already an inquisitor
-  if (student.inquisitor === true) {
-    closeStudentModal();
-    // show feedback
-    settings.feedback = "inquisitorExists";
-    showFeedback(student);
-  }
-  // if student is full blood or house slytherin
-  if ((student.inquisitor === false && student.bloodStatus === "Pure Blood") || (student.inquisitor === false && student.house === "Slytherin")) {
-    // add to inquisitorial squad
-    addInquisitor(student);
-    buildList();
-    closeStudentModal();
-    // show feedback
-    settings.feedback = "inquisitorSuccess";
-    showFeedback(student);
-  }
-  if (student.bloodStatus !== "Pure Blood" || student.house !== "Slytherin") {
-    // console.log("Only pure bloods and students from house Slytherin can join the inquisitorial squad.");
-    settings.feedback = "inquisitorError";
-    showFeedback(student);
-  }
-
-  function addInquisitor(student) {
-    student.inquisitor = true;
   }
 }
 
