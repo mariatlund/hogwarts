@@ -36,6 +36,7 @@ const settings = {
   sortBy: "none",
   searchBy: "",
   activeArray: [allStudents],
+  feedback: "",
 };
 
 async function start() {
@@ -127,7 +128,7 @@ function createStudent(jsonObject) {
 
 //  ---------- DISPLAYING STUDENTS ----------
 
-function displayList(students, pureBloods, halfBloods) {
+function displayList(students) {
   console.log("display list");
   // make sure list is empty
   document.querySelector(".list").innerHTML = "";
@@ -183,6 +184,9 @@ function displayListStats() {
 }
 
 // ---------- MODALS - STUDENT DETAILS, WARNINGS, ETC. ----------
+
+// -- STUDENT DETAILS MODAL --
+
 function openStudentModal(student) {
   // console.log("open modal");
   // add student info to modal
@@ -203,18 +207,113 @@ function openStudentModal(student) {
   if (student.inquisitor === true) {
     document.querySelector(".modal-inquisitor").classList.remove("hidden");
   }
+  if (student.prefect === false && student.inquisitor === false) {
+    document.querySelector(".modal-prefect").classList.add("hidden");
+    document.querySelector(".modal-inquisitor").classList.add("hidden");
+  }
   // show blood status
   document.querySelector(".blood-status").textContent = student.bloodStatus;
   // add eventlistener to close button
-  document.querySelector(".close").addEventListener("click", closeStudentModal);
+  document.querySelector(".closeStudentModal").addEventListener("click", closeStudentModal);
   // make modal visible
-  document.querySelector(".modal-wrapper").classList.remove("hidden");
+  document.querySelector(".studentModal").classList.remove("hidden");
+
+  // administrator actions - buttons
+  document.querySelector(".expel").addEventListener("click", () => {
+    expelStudent(student);
+  });
+  document.querySelector(".make-prefect").addEventListener("click", () => {
+    checkPrefects(student);
+  });
+  document.querySelector(".make-inquisitor").addEventListener("click", () => {
+    makeInquisitor(student);
+  });
 }
 
 function closeStudentModal() {
   // console.log("close modal");
-  document.querySelector(".modal-wrapper").classList.toggle("hidden");
+  document.querySelector(".studentModal").classList.add("hidden");
   document.querySelector(".student-modal").classList.remove("gryffindor", "slytherin", "ravenclaw", "hufflepuff");
+
+  // remove button event listeners
+  // document.querySelector(".expel").removeEventListener("click", expelStudent);
+}
+
+// -- PREFECTS WARNING MODAL --
+
+function openPrefectsModal(studentA, studentB, student) {
+  // add eventlistener to close button
+  document.querySelector(".closePrefectsModal").addEventListener("click", closePrefectsModal);
+  // add student names to buttons
+  document.querySelector(".removePrefectA").textContent = `Remove ${studentA.firstName}`;
+  document.querySelector(".removePrefectB").textContent = `Remove ${studentB.firstName}`;
+
+  // add event listeners to buttons
+  document.querySelector(".removePrefectA").addEventListener("click", removePrefectA);
+  document.querySelector(".removePrefectB").addEventListener("click", removePrefectB);
+
+  function removePrefectA() {
+    removePrefect(studentA);
+    // make chosen student prefect
+    addPrefect(student);
+    buildList();
+    closePrefectsModal();
+    closeStudentModal();
+  }
+  function removePrefectB() {
+    removePrefect(studentB);
+    // make chosen student prefect
+    addPrefect(student);
+    buildList();
+    closePrefectsModal();
+    closeStudentModal();
+  }
+  function removePrefect(chosenStudent) {
+    chosenStudent.prefect = false;
+  }
+  function addPrefect(student) {
+    student.prefect = true;
+  }
+
+  // make modal visible
+  document.querySelector(".prefectsModal").classList.remove("hidden");
+}
+
+function closePrefectsModal() {
+  document.querySelector(".prefectsModal").classList.add("hidden");
+}
+
+// -- FEEDBACK POPUPS --
+function showFeedback(student) {
+  if (settings.feedback === "inquisitorSuccess") {
+    document.querySelector(".feedback").textContent = `${student.firstName} is now an inquisitor.`;
+  }
+  if (settings.feedback === "inquisitorExists") {
+    document.querySelector(".feedback").textContent = `${student.firstName} is already an inquisitor.`;
+  }
+
+  if (settings.feedback === "inquisitorError") {
+    document.querySelector(".feedback").textContent = "Only pure bloods and students from house Slytherin can join the inquisitorial squad.";
+  }
+
+  document.querySelector(".feedback-wrapper").classList.remove("hidden");
+  document.querySelector(".feedback-wrapper").classList.add("fadeInAndOut");
+  document.querySelector(".feedback-wrapper").addEventListener("animationend", hideFeedback);
+
+  // setTimeout(() => {
+  //   hideFeedback();
+  // }, 2000);
+}
+
+function hideFeedback() {
+  document.querySelector(".feedback-wrapper").classList.add("hidden");
+
+  // document.querySelector(".feedback-wrapper").classList.add("fadeOut");
+  // document.querySelector(".feedback-wrapper").addEventListener("animationend", hide);
+
+  // function hide() {
+  //   document.querySelector(".feedback-wrapper").classList.add("hidden");
+  // }
 }
 
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
@@ -440,13 +539,116 @@ function determineBloodStatus(student) {
 }
 
 // ---------- STUDENT ADMINISTRATOR ACTIONS ----------
-// PREFECTS
+// -- PREFECTS --
 // make a student a prefect (only one girl and one boy) - provide warning message when overriding existing prefect
 
-// INQUISITORS
+function checkPrefects(student) {
+  let numberOfPrefects = [];
+  numberOfPrefects = settings.activeArray.filter(isPrefect);
+  let housePrefects = [];
+  // console.log("checkPrefects, numberOfPrefects:", numberOfPrefects);
+
+  // find how many prefects there are for the selected student's house
+  if (student.house === "Gryffindor") {
+    housePrefects = numberOfPrefects.filter(isGryffindor);
+    console.log("housePrefects:", housePrefects);
+  }
+  if (student.house === "Slytherin") {
+    housePrefects = numberOfPrefects.filter(isSlytherin);
+    console.log("housePrefects:", housePrefects);
+  }
+  if (student.house === "Hufflepuff") {
+    housePrefects = numberOfPrefects.filter(isHufflepuff);
+    console.log("housePrefects:", housePrefects);
+  }
+  if (student.house === "Ravenclaw") {
+    housePrefects = numberOfPrefects.filter(isRavenclaw);
+    console.log("housePrefects:", housePrefects);
+  }
+
+  // NOT WORKING CORRECTLY - something seems to be wrong with the housePrefects array - it's not updating by house
+
+  // call makePrefect function that decides what should happen
+  makePrefect(student, housePrefects);
+}
+
+function makePrefect(student, housePrefects) {
+  // student is already a prefect
+  if (student.prefect === true) {
+    console.log("This student is already a prefect");
+    // show message
+  }
+  // if there are already two prefects for the chosen house
+  if (housePrefects.length >= 2) {
+    const studentA = housePrefects[0];
+    const studentB = housePrefects[1];
+    closeStudentModal();
+    openPrefectsModal(studentA, studentB, student);
+  }
+  // make prefect
+  else {
+    student.prefect = true;
+    console.log(`${student.firstName} is now a prefect!`);
+    // show animation/feedback message
+    // display modal again to show prefect status
+    closeStudentModal();
+    // display list again to show prefect status
+    displayList(settings.activeArray);
+  }
+}
+
+// -- INQUISITORS --
 // make a student an inquisitor (based on given conditions - full blood or slytherin)
 
-// EXPELLING
+function makeInquisitor(student) {
+  // if student is already an inquisitor
+  if (student.inquisitor === true) {
+    closeStudentModal();
+    // show feedback
+    settings.feedback = "inquisitorExists";
+    showFeedback(student);
+  }
+  // if student is full blood or house slytherin
+  if (student.bloodStatus === "Pure Blood" || student.house === "Slytherin") {
+    // add to inquisitorial squad
+    addInquisitor(student);
+    buildList();
+    closeStudentModal();
+    // show feedback
+    settings.feedback = "inquisitorSuccess";
+    showFeedback(student);
+  } else {
+    // console.log("Only pure bloods and students from house Slytherin can join the inquisitorial squad.");
+    settings.feedback = "inquisitorError";
+    showFeedback(student);
+  }
+
+  function addInquisitor(student) {
+    student.inquisitor = true;
+  }
+}
+
+// -- EXPELLING --
+
+function expelStudent(student) {
+  console.log("expelStudent", student);
+  // check if student is already expelled or not
+  if (student.expelled === false) {
+    student.expelled = true;
+    console.log("student expelled");
+    // console.log("Active array:", settings.activeArray);
+    // remove student from active array (use splice?)
+    studentIndex = settings.activeArray.indexOf(student);
+    console.log("studentIndex", studentIndex);
+    // settings.activeArray.splice()
+
+    // add student to array of expelled students (use push)
+    // add styling
+  } else {
+    console.log("Student is already expelled");
+  }
+}
+
 // check animal winners exercise
 // use flags/toggle
 // maybe have three arrays: allStudents, activeArray (use this for filtering), expelledStudents

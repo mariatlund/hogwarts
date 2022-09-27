@@ -232,9 +232,6 @@ h2 {
 }
 
 .student-modal {
-  /* position: fixed;
-  top: 40%;
-  left: 40%; */
   padding: 2em;
   border-radius: 5px;
 
@@ -358,12 +355,80 @@ button {
   border-color: var(--ravenclaw-secondary);
 }
 
+/* PREFECTS MODAL */
+
+.prefects-modal {
+  padding: 2em;
+  border-radius: 5px;
+  width: 30vw;
+
+  background-color: var(--green);
+  border-style: solid;
+  border-color: var(--font_color);
+  border-width: 5px;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1em;
+
+  justify-items: center;
+  align-content: center;
+  z-index: 15;
+}
+
+.prefects-message {
+  display: grid;
+  gap: 0.5em;
+}
+
+/* FEEDBACK POPUPS */
+
+.feedback-wrapper {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+
+  display: flex;
+  align-items: start;
+  justify-content: end;
+  z-index: 15;
+}
+
+.feedback {
+  background-color: var(--dark_green);
+  border-style: solid;
+  border-color: var(--dark_green);
+  color: var(--light_grey);
+  border-width: 5px;
+  padding: 1em;
+  margin-right: 1em;
+}
+
+/* EFFECTS & ANIMATIONS */
+
+.student-container:hover {
+  transform: scale(103%);
+}
+
 .hidden {
   display: none;
 }
 
-/* EFFECTS */
+.fadeInAndOut {
+  animation: fadeInAndOut 3s;
+}
 
-.student-container:hover {
-  transform: scale(103%);
+@keyframes fadeInAndOut {
+  0% {
+    filter: opacity(0%);
+  }
+  25% {
+    filter: opacity(100%);
+  }
+  75% {
+    filter: opacity(100%);
+  }
+  100% {
+    filter: opacity(0%);
+  }
 }

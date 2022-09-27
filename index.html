@@ -87,7 +87,7 @@
       </section>
 
       <!-- STUDENT DETAILS MODAL -->
-      <div class="modal-wrapper hidden">
+      <div class="modal-wrapper studentModal hidden">
         <div class="student-modal">
           <div class="modal-info">
             <div class="modal-image">
@@ -113,12 +113,34 @@
           </div>
 
           <div class="buttons">
-            <button type="button">Make prefect</button>
-            <button type="button">Make inquisitor</button>
-            <button type="button">Expel student</button>
+            <button type="button" class="make-prefect">Make prefect</button>
+            <button type="button" class="make-inquisitor">Make inquisitor</button>
+            <button type="button" class="expel">Expel student</button>
           </div>
-          <div class="close"></div>
+          <div class="close closeStudentModal"></div>
         </div>
+      </div>
+
+      <!-- PREFECTS MODAL -->
+      <div class="modal-wrapper prefectsModal hidden">
+        <div class="prefects-modal">
+          <h2 class="prefects-warning">Warning!</h2>
+          <div class="prefects-message">
+            <p>There can only be two prefects per house.</p>
+            <p>Select a prefect to remove, or close this message to keep the existing prefects.</p>
+          </div>
+
+          <div class="buttons">
+            <button type="button" class="removePrefectA">Remove student A</button>
+            <button type="button" class="removePrefectB">Remove student B</button>
+          </div>
+          <div class="close closePrefectsModal"></div>
+        </div>
+      </div>
+
+      <!-- ------ FEEDBACK POP UPS ------ -->
+      <div class="feedback-wrapper hidden">
+        <div class="feedback"></div>
       </div>
 
       <section class="list">
