@@ -299,10 +299,6 @@ function showFeedback(student) {
   document.querySelector(".feedback-wrapper").classList.remove("hidden");
   document.querySelector(".feedback-wrapper").classList.add("fadeInAndOut");
   document.querySelector(".feedback-wrapper").addEventListener("animationend", hideFeedback);
-
-  // setTimeout(() => {
-  //   hideFeedback();
-  // }, 2000);
 }
 
 function hideFeedback() {
@@ -609,7 +605,7 @@ function makeInquisitor(student) {
     showFeedback(student);
   }
   // if student is full blood or house slytherin
-  if (student.bloodStatus === "Pure Blood" || student.house === "Slytherin") {
+  if ((student.inquisitor === false && student.bloodStatus === "Pure Blood") || (student.inquisitor === false && student.house === "Slytherin")) {
     // add to inquisitorial squad
     addInquisitor(student);
     buildList();
@@ -617,7 +613,8 @@ function makeInquisitor(student) {
     // show feedback
     settings.feedback = "inquisitorSuccess";
     showFeedback(student);
-  } else {
+  }
+  if (student.bloodStatus !== "Pure Blood" || student.house !== "Slytherin") {
     // console.log("Only pure bloods and students from house Slytherin can join the inquisitorial squad.");
     settings.feedback = "inquisitorError";
     showFeedback(student);

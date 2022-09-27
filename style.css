@@ -392,6 +392,7 @@ button {
   align-items: start;
   justify-content: end;
   z-index: 15;
+  pointer-events: none;
 }
 
 .feedback {
@@ -402,6 +403,7 @@ button {
   border-width: 5px;
   padding: 1em;
   margin-right: 1em;
+  pointer-events: initial;
 }
 
 /* EFFECTS & ANIMATIONS */
