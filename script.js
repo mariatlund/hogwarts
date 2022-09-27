@@ -10,6 +10,9 @@ const bloodURL = "https://petlatkea.dk/2021/hogwarts/families.json";
 let allStudents = [];
 // array of expelled students
 let expelledStudents = [];
+// array of prefects
+let prefects = [];
+let housePrefects = [];
 // blood data arrays
 let pureBloods = [];
 let halfBloods = [];
@@ -223,7 +226,7 @@ function openStudentModal(student) {
     expelStudent(student);
   });
   document.querySelector(".make-prefect").addEventListener("click", () => {
-    checkPrefects(student);
+    makePrefect(student);
   });
   document.querySelector(".make-inquisitor").addEventListener("click", () => {
     makeInquisitor(student);
@@ -296,8 +299,13 @@ function showFeedback(student) {
   if (settings.feedback === "inquisitorError") {
     document.querySelector(".feedback").textContent = "Only pure bloods and students from house Slytherin can join the inquisitorial squad.";
   }
-
   // prefects feedback popups
+  if (settings.feedback === "prefectExists") {
+    document.querySelector(".feedback").textContent = `${student.firstName} is already a prefect.`;
+  }
+  if (settings.feedback === "prefectSuccess") {
+    document.querySelector(".feedback").textContent = `${student.firstName} is now a prefect.`;
+  }
 
   // show message
   document.querySelector(".feedback-wrapper").classList.remove("hidden");
@@ -569,59 +577,62 @@ function makeInquisitor(student) {
 // -- PREFECTS --
 // make a student a prefect (only one girl and one boy) - provide warning message when overriding existing prefect
 
-function checkPrefects(student) {
-  let numberOfPrefects = [];
-  numberOfPrefects = settings.activeArray.filter(isPrefect);
-  let housePrefects = [];
-  // console.log("checkPrefects, numberOfPrefects:", numberOfPrefects);
+function makePrefect(student) {
+  // find existing prefects
+  let housePrefects = checkPrefects(student);
 
-  // find how many prefects there are for the selected student's house
-  if (student.house === "Gryffindor") {
-    housePrefects = numberOfPrefects.filter(isGryffindor);
-    console.log("housePrefects:", housePrefects);
-  }
-  if (student.house === "Slytherin") {
-    housePrefects = numberOfPrefects.filter(isSlytherin);
-    console.log("housePrefects:", housePrefects);
-  }
-  if (student.house === "Hufflepuff") {
-    housePrefects = numberOfPrefects.filter(isHufflepuff);
-    console.log("housePrefects:", housePrefects);
-  }
-  if (student.house === "Ravenclaw") {
-    housePrefects = numberOfPrefects.filter(isRavenclaw);
-    console.log("housePrefects:", housePrefects);
-  }
-
-  // NOT WORKING CORRECTLY - something seems to be wrong with the housePrefects array - it's not updating by house
-
-  // call makePrefect function that decides what should happen
-  makePrefect(student, housePrefects);
-}
-
-function makePrefect(student, housePrefects) {
   // student is already a prefect
   if (student.prefect === true) {
-    console.log("This student is already a prefect");
-    // show message
+    // console.log("This student is already a prefect");
+    // show feedback
+    settings.feedback = "prefectExists";
+    showFeedback(student);
   }
+
   // if there are already two prefects for the chosen house
-  if (housePrefects.length >= 2) {
+  if (student.prefect === false && housePrefects.length >= 2) {
     const studentA = housePrefects[0];
     const studentB = housePrefects[1];
     closeStudentModal();
+    // show warning modal with options
     openPrefectsModal(studentA, studentB, student);
   }
-  // make prefect
-  else {
-    student.prefect = true;
-    console.log(`${student.firstName} is now a prefect!`);
-    // show animation/feedback message
-    // display modal again to show prefect status
-    closeStudentModal();
-    // display list again to show prefect status
-    displayList(settings.activeArray);
+
+  // if student is not already a prefect and the house can have more prefects
+  if (student.prefect === false && housePrefects.length < 2) {
+    addPrefect();
+    // console.log(`${student.firstName} is now a prefect.`);
+    // show feedback
+    settings.feedback = "prefectSuccess";
+    showFeedback(student);
   }
+
+  function addPrefect() {
+    student.prefect = true;
+    // add student to prefects array
+    prefects.push(student);
+    console.log("prefects:", prefects);
+    closeStudentModal();
+    displayList(settings.activeArray);
+    // show feedback
+  }
+}
+
+function checkPrefects(student) {
+  // find how many prefects there are for the selected student's house
+  if (student.house === "Gryffindor") {
+    housePrefects = prefects.filter(isGryffindor);
+  }
+  if (student.house === "Slytherin") {
+    housePrefects = prefects.filter(isSlytherin);
+  }
+  if (student.house === "Hufflepuff") {
+    housePrefects = prefects.filter(isHufflepuff);
+  }
+  if (student.house === "Ravenclaw") {
+    housePrefects = prefects.filter(isRavenclaw);
+  }
+  return housePrefects;
 }
 
 // -- EXPELLING --
