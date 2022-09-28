@@ -162,6 +162,10 @@ function displayStudent(student) {
   if (student.inquisitor === true) {
     clone.querySelector(".inquisitor").classList.remove("hidden");
   }
+  if (student.expelled === true) {
+    clone.querySelector(".expelled").classList.remove("hidden");
+    clone.querySelector(".student-img").classList.add("expelled-img");
+  }
   // add event listeners to student containers (?)
   clone.querySelector(".student-container").addEventListener("click", () => {
     openStudentModal(student);
@@ -306,6 +310,12 @@ function showFeedback(student) {
   if (settings.feedback === "prefectSuccess") {
     document.querySelector(".feedback").textContent = `${student.firstName} is now a prefect.`;
   }
+  if (settings.feedback === "alreadyExpelled") {
+    document.querySelector(".feedback").textContent = `${student.firstName} is already expelled.`;
+  }
+  if (settings.feedback === "expelSuccess") {
+    document.querySelector(".feedback").textContent = `${student.firstName} has been expelled.`;
+  }
 
   // show message
   document.querySelector(".feedback-wrapper").classList.remove("hidden");
@@ -381,10 +391,7 @@ function filterList(filteredList) {
   }
   // filtering by expelled students / non-expelled students
   if (settings.filterBy === "expelled") {
-    settings.activeArray = allStudents.filter(isExpelled);
-  }
-  if (settings.filterBy === "notExpelled") {
-    settings.activeArray = allStudents.filter(isNotExpelled);
+    settings.activeArray = expelledStudents;
   }
 
   return settings.activeArray;
@@ -424,12 +431,6 @@ function isInquisitor(student) {
 }
 function isPrefect(student) {
   if (student.prefect === true) {
-    return true;
-  }
-  return false;
-}
-function isExpelled(student) {
-  if (student.expelled === true) {
     return true;
   }
   return false;
@@ -564,7 +565,6 @@ function makeInquisitor(student) {
     showFeedback(student);
   }
   if ((student.inquisitor === false && student.bloodStatus !== "Pure Blood") || (student.inquisitor === false && student.house !== "Slytherin")) {
-    console.log("Only pure bloods and students from house Slytherin can join the inquisitorial squad.");
     settings.feedback = "inquisitorError";
     showFeedback(student);
   }
@@ -579,7 +579,7 @@ function makeInquisitor(student) {
 
 function makePrefect(student) {
   // find existing prefects
-  let housePrefects = checkPrefects(student);
+  housePrefects = checkPrefects(student);
 
   // student is already a prefect
   if (student.prefect === true) {
@@ -619,6 +619,7 @@ function makePrefect(student) {
 }
 
 function checkPrefects(student) {
+  prefects = settings.activeArray.filter(isPrefect);
   // find how many prefects there are for the selected student's house
   if (student.house === "Gryffindor") {
     housePrefects = prefects.filter(isGryffindor);
@@ -638,28 +639,35 @@ function checkPrefects(student) {
 // -- EXPELLING --
 
 function expelStudent(student) {
-  console.log("expelStudent", student);
-  // check if student is already expelled or not
+  // if student is already expelled
+  if (student.expelled === true) {
+    // console.log("Student is already expelled");
+    settings.feedback = "alreadyExpelled";
+    showFeedback(student);
+  }
+
+  // if student is not expelled
   if (student.expelled === false) {
     student.expelled = true;
-    console.log("student expelled");
-    // console.log("Active array:", settings.activeArray);
+    // remove other roles
+    student.prefect = false;
+    student.inquisitor = false;
+    // find student in active array
+    const studentIndex = settings.activeArray.indexOf(student);
+    // add student to array of expelled students
+    expelledStudents.push(student);
     // remove student from active array (use splice?)
-    studentIndex = settings.activeArray.indexOf(student);
-    console.log("studentIndex", studentIndex);
-    // settings.activeArray.splice()
+    settings.activeArray.splice(studentIndex, 1);
 
-    // add student to array of expelled students (use push)
-    // add styling
-  } else {
-    console.log("Student is already expelled");
+    // update styling
+    buildList();
+    // show feedback
+    settings.feedback = "expelSuccess";
+    showFeedback(student);
+
+    console.log("expelledStudents:", expelledStudents);
   }
 }
-
-// check animal winners exercise
-// use flags/toggle
-// maybe have three arrays: allStudents, activeArray (use this for filtering), expelledStudents
-// could also use filtering
 
 // ---------- HACKING ----------
 // INSERT YOURSELF INTO THE LIST
