@@ -223,6 +223,10 @@ function openStudentModal(student) {
     document.querySelector(".modal-img").classList.add("expelled-img");
     document.querySelector(".modal-expelled").classList.remove("hidden");
   }
+  if (student.expelled === false) {
+    document.querySelector(".modal-img").classList.remove("expelled-img");
+    document.querySelector(".modal-expelled").classList.add("hidden");
+  }
   // show blood status
   document.querySelector(".blood-status").textContent = student.bloodStatus;
   // add eventlistener to close button
@@ -644,13 +648,6 @@ function checkPrefects(student) {
 // -- EXPELLING --
 
 function expelStudent(student) {
-  // if student is already expelled
-  if (student.expelled === true) {
-    // console.log("Student is already expelled");
-    settings.feedback = "alreadyExpelled";
-    showFeedback(student);
-  }
-
   // if student is not expelled
   if (student.expelled === false) {
     student.expelled = true;
@@ -672,6 +669,13 @@ function expelStudent(student) {
     showFeedback(student);
 
     console.log("expelledStudents:", expelledStudents);
+  }
+
+  // if student is already expelled
+  else {
+    // console.log("Student is already expelled");
+    settings.feedback = "alreadyExpelled";
+    showFeedback(student);
   }
 }
 
