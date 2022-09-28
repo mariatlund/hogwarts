@@ -421,6 +421,11 @@ button {
   pointer-events: initial;
 }
 
+.error {
+  background-color: var(--gryffindor-secondary);
+  border-color: var(--gryffindor-secondary);
+}
+
 /* EFFECTS & ANIMATIONS */
 
 .student-container:hover {

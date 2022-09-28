@@ -17,6 +17,8 @@ let housePrefects = [];
 let pureBloods = [];
 let halfBloods = [];
 let muggles = [];
+// hacking
+let hacked = false;
 
 // create prototype for student objects
 const Student = {
@@ -302,28 +304,43 @@ function closePrefectsModal() {
 // -- FEEDBACK POPUPS --
 function showFeedback(student) {
   // inquisitor feedback popups
+  if (settings.feedback === "inquisitorsBroken") {
+    document.querySelector(".feedback").textContent = `Oh! There go all your inquisitors.`;
+    document.querySelector(".feedback").classList.add("error");
+  }
   if (settings.feedback === "inquisitorSuccess") {
     document.querySelector(".feedback").textContent = `${student.firstName} is now an inquisitor.`;
+    document.querySelector(".feedback").classList.remove("error");
   }
   if (settings.feedback === "inquisitorExists") {
     document.querySelector(".feedback").textContent = `${student.firstName} is already an inquisitor.`;
+    document.querySelector(".feedback").classList.remove("error");
   }
 
   if (settings.feedback === "inquisitorError") {
     document.querySelector(".feedback").textContent = "Only pure bloods and students from house Slytherin can join the inquisitorial squad.";
+    document.querySelector(".feedback").classList.remove("error");
   }
   // prefects feedback popups
   if (settings.feedback === "prefectExists") {
     document.querySelector(".feedback").textContent = `${student.firstName} is already a prefect.`;
+    document.querySelector(".feedback").classList.remove("error");
   }
   if (settings.feedback === "prefectSuccess") {
     document.querySelector(".feedback").textContent = `${student.firstName} is now a prefect.`;
+    document.querySelector(".feedback").classList.remove("error");
+  }
+  if (settings.feedback === "cannotExpel") {
+    document.querySelector(".feedback").textContent = `${student.firstName} cannot be expelled!`;
+    document.querySelector(".feedback").classList.add("error");
   }
   if (settings.feedback === "alreadyExpelled") {
     document.querySelector(".feedback").textContent = `${student.firstName} is already expelled.`;
+    document.querySelector(".feedback").classList.remove("error");
   }
   if (settings.feedback === "expelSuccess") {
     document.querySelector(".feedback").textContent = `${student.firstName} has been expelled.`;
+    document.querySelector(".feedback").classList.remove("error");
   }
 
   // show message
@@ -335,6 +352,8 @@ function showFeedback(student) {
 
 function hideFeedback() {
   document.querySelector(".feedback-wrapper").classList.add("hidden");
+
+  // remove classes
 }
 
 //  ---------- ACTIONS MENU - FILTERING, SORTING, SEARCHING ----------
@@ -535,18 +554,28 @@ function prepareBlood(bloodData) {
 }
 
 function determineBloodStatus(student) {
-  // check if last name is in half/pure list and set bloodStatus, if not in either, set to muggle, if in both, decide whether to set as half or pure
-  if (pureBloods.includes(student.lastName)) {
-    student.bloodStatus = "Pure Blood";
-  }
-  if (pureBloods.includes(student.lastName) && halfBloods.includes(student.lastName)) {
-    student.bloodStatus = "Pure Blood";
-  }
-  if (halfBloods.includes(student.lastName)) {
-    student.bloodStatus = "Half Blood";
-  }
-  if (!pureBloods.includes(student.lastName) && !halfBloods.includes(student.lastName)) {
-    student.bloodStatus = "Muggleborn";
+  // IF HACKED
+  if (hacked === true) {
+    // randomize blood status for each student
+    allStudents.forEach((student) => {
+      const bloodArray = ["Pure Blood", "Half Blood", "Muggleborn"];
+      let randomBlood = Math.floor(Math.random() * 3);
+      student.bloodStatus = bloodArray[randomBlood];
+    });
+  } else {
+    // check if last name is in half/pure list and set bloodStatus, if not in either, set to muggle, if in both, decide whether to set as half or pure
+    if (pureBloods.includes(student.lastName)) {
+      student.bloodStatus = "Pure Blood";
+    }
+    if (pureBloods.includes(student.lastName) && halfBloods.includes(student.lastName)) {
+      student.bloodStatus = "Pure Blood";
+    }
+    if (halfBloods.includes(student.lastName)) {
+      student.bloodStatus = "Half Blood";
+    }
+    if (!pureBloods.includes(student.lastName) && !halfBloods.includes(student.lastName)) {
+      student.bloodStatus = "Muggleborn";
+    }
   }
 }
 
@@ -608,7 +637,7 @@ function makePrefect(student) {
     showFeedback(student);
   }
   // student is already a prefect
-  if (student.prefect === true && housePrefects.length < 2) {
+  else if (student.prefect === true && housePrefects.length < 2) {
     // console.log("This student is already a prefect");
     // show feedback
     settings.feedback = "prefectExists";
@@ -647,8 +676,15 @@ function checkPrefects(student) {
 // -- EXPELLING --
 
 function expelStudent(student) {
+  // making me unexpellable
+  if (student.firstName === "Maria") {
+    // show error message
+    settings.feedback = "cannotExpel";
+    showFeedback(student);
+  }
+
   // if student is not expelled
-  if (student.expelled === false) {
+  else if (student.expelled === false) {
     student.expelled = true;
     // remove other roles
     student.prefect = false;
@@ -661,7 +697,7 @@ function expelStudent(student) {
     settings.activeArray.splice(studentIndex, 1);
 
     // update styling
-    openStudentModal(student);
+    closeStudentModal();
     buildList();
     // show feedback
     settings.feedback = "expelSuccess";
@@ -671,7 +707,7 @@ function expelStudent(student) {
   }
 
   // if student is already expelled
-  else {
+  else if (student.expelled === true) {
     // console.log("Student is already expelled");
     settings.feedback = "alreadyExpelled";
     showFeedback(student);
@@ -683,6 +719,49 @@ function expelStudent(student) {
 // create student object for yourself, then use .push() to add yourself into the array of students
 // when expelling, check if student.name === your name and show a warning that you cannot be expelled
 
-// BREAK BLOOD STATUS
-// pop through the students, modify blood status with condition (check flag?) and if flagged call loop to mess up blood status
-// BREAK INQUISITOR SQUAD
+function hackTheSystem() {
+  hacked = true;
+
+  // add hacked styling
+  // hackItUp();
+  // insert yourself into list
+  insertNewStudent();
+  // break inquisitor squad
+  breakInquisitorSquad();
+  // rebuild list to show changes
+  buildList();
+}
+
+function insertNewStudent() {
+  // create student object
+  const me = {
+    firstName: "Maria",
+    middleName: "",
+    lastName: "Lundqvist",
+    nickName: "Mae",
+    house: "Gryffindor",
+    gender: "girl",
+    image: "images/lundqvist_m.png",
+    inquisitor: false,
+    prefect: false,
+    bloodStatus: "",
+    expelled: false,
+  };
+  allStudents.push(me);
+}
+
+// -- BREAK INQUISITOR SQUAD--
+
+function breakInquisitorSquad() {
+  allStudents.forEach((student) => {
+    if (student.inquisitor === true) {
+      setTimeout(() => {
+        student.inquisitor = false;
+        buildList();
+        // show pop up/animation/feedback
+        settings.feedback = "inquisitorsBroken";
+        showFeedback();
+      }, 2000);
+    }
+  });
+}
