@@ -590,14 +590,6 @@ function makePrefect(student) {
   // find existing prefects
   housePrefects = checkPrefects(student);
 
-  // student is already a prefect
-  if (student.prefect === true) {
-    // console.log("This student is already a prefect");
-    // show feedback
-    settings.feedback = "prefectExists";
-    showFeedback(student);
-  }
-
   // if there are already two prefects for the chosen house
   if (student.prefect === false && housePrefects.length >= 2) {
     const studentA = housePrefects[0];
@@ -613,6 +605,13 @@ function makePrefect(student) {
     // console.log(`${student.firstName} is now a prefect.`);
     // show feedback
     settings.feedback = "prefectSuccess";
+    showFeedback(student);
+  }
+  // student is already a prefect
+  if (student.prefect === true && housePrefects.length < 2) {
+    // console.log("This student is already a prefect");
+    // show feedback
+    settings.feedback = "prefectExists";
     showFeedback(student);
   }
 
