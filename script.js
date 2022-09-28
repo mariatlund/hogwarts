@@ -218,6 +218,11 @@ function openStudentModal(student) {
     document.querySelector(".modal-prefect").classList.add("hidden");
     document.querySelector(".modal-inquisitor").classList.add("hidden");
   }
+  // show expelled status
+  if (student.expelled === true) {
+    document.querySelector(".modal-img").classList.add("expelled-img");
+    document.querySelector(".modal-expelled").classList.remove("hidden");
+  }
   // show blood status
   document.querySelector(".blood-status").textContent = student.bloodStatus;
   // add eventlistener to close button
@@ -660,6 +665,7 @@ function expelStudent(student) {
     settings.activeArray.splice(studentIndex, 1);
 
     // update styling
+    openStudentModal(student);
     buildList();
     // show feedback
     settings.feedback = "expelSuccess";

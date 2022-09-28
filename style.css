@@ -262,6 +262,21 @@ h2 {
   gap: 1em;
 }
 
+.modal-image {
+  display: grid;
+  align-items: center;
+}
+
+.modal-expelled {
+  transform: rotate(-45deg);
+  position: absolute;
+  font-weight: bold;
+  font-size: x-large;
+  color: var(--light_grey);
+  background-color: darkred;
+  z-index: 2;
+}
+
 .modal-image img {
   max-width: 10em;
   border-radius: 50%;
