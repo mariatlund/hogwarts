@@ -585,28 +585,42 @@ function determineBloodStatus(student) {
 // make a student an inquisitor (based on given conditions - full blood or slytherin)
 
 function makeInquisitor(student) {
-  // if student is already an inquisitor
-  if (student.inquisitor === true) {
-    closeStudentModal();
-    // show feedback
-    settings.feedback = "inquisitorExists";
-    showFeedback(student);
-  }
-  // if student is full blood or house slytherin
-  if ((student.inquisitor === false && student.bloodStatus === "Pure Blood") || (student.inquisitor === false && student.house === "Slytherin")) {
+  // IF HACKED
+  if (hacked === true) {
     // add to inquisitorial squad
     addInquisitor(student);
     buildList();
     closeStudentModal();
-    // show feedback
-    settings.feedback = "inquisitorSuccess";
-    showFeedback(student);
+    setTimeout(() => {
+      student.inquisitor = false;
+      buildList();
+      // show pop up/animation/feedback
+      settings.feedback = "inquisitorsBroken";
+      showFeedback();
+    }, 2000);
+  } else {
+    // if student is already an inquisitor
+    if (student.inquisitor === true) {
+      closeStudentModal();
+      // show feedback
+      settings.feedback = "inquisitorExists";
+      showFeedback(student);
+    }
+    // if student is full blood or house slytherin
+    if ((student.inquisitor === false && student.bloodStatus === "Pure Blood") || (student.inquisitor === false && student.house === "Slytherin")) {
+      // add to inquisitorial squad
+      addInquisitor(student);
+      buildList();
+      closeStudentModal();
+      // show feedback
+      settings.feedback = "inquisitorSuccess";
+      showFeedback(student);
+    }
+    if ((student.inquisitor === false && student.bloodStatus !== "Pure Blood") || (student.inquisitor === false && student.house !== "Slytherin")) {
+      settings.feedback = "inquisitorError";
+      showFeedback(student);
+    }
   }
-  if ((student.inquisitor === false && student.bloodStatus !== "Pure Blood") || (student.inquisitor === false && student.house !== "Slytherin")) {
-    settings.feedback = "inquisitorError";
-    showFeedback(student);
-  }
-
   function addInquisitor(student) {
     student.inquisitor = true;
   }
@@ -715,15 +729,12 @@ function expelStudent(student) {
 }
 
 // ---------- HACKING ----------
-// INSERT YOURSELF INTO THE LIST
-// create student object for yourself, then use .push() to add yourself into the array of students
-// when expelling, check if student.name === your name and show a warning that you cannot be expelled
 
 function hackTheSystem() {
   hacked = true;
 
   // add hacked styling
-  // hackItUp();
+  hackItUp();
   // insert yourself into list
   insertNewStudent();
   // break inquisitor squad
@@ -731,6 +742,13 @@ function hackTheSystem() {
   // rebuild list to show changes
   buildList();
 }
+
+// -- ADD HACKED STYLING --
+function hackItUp() {
+  document.querySelector("body").classList.add("hacked");
+}
+
+// -- INSERT YOURSELF INTO THE LIST --
 
 function insertNewStudent() {
   // create student object

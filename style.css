@@ -454,3 +454,9 @@ button {
     filter: opacity(0%);
   }
 }
+
+/* ---------- HACKED STYLING ---------- */
+
+.hacked {
+  background-color: var(--gryffindor-primary);
+}
